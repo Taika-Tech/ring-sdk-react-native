@@ -1,0 +1,103 @@
+# Node modules
+node_modules/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Next.js build output
+.next/
+
+# Nuxt.js build output
+.nuxt/
+
+# Gatsby files
+.cache/
+# Comment in the public line in if your project is Gatsby and not Next.js
+# public
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Mac System files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Icon must end with two \r
+Icon
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Python
+*.py[cod]
+__pycache__/
+*.so
+
+# TypeScript
+*.tsbuildinfo
+dist/
+
+# React Native
+*.expo
+.expo-shared
+.expo/
+
+# Android/IntelliJ
+*.apk
+*.ap_
+*.idea/
+
+# iOS
+*.xcworkspace
+*.xcuserdata
+*.lock
+*.xcuserstate
+
+# Build folders
+build/
+.idea/
+.vscode/
+out/
+

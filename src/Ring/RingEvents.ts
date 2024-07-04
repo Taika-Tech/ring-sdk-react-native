@@ -1,0 +1,120 @@
+/* RingEvents.ts
+ * 
+ * Copyright Taika Tech 2024
+ * 
+ * This software is licensed under dual licensing terms:
+ *
+ * 1. MIT License:
+ *    - when used for personal use,
+ *    - when used for educational use,
+ *    - when used with Taika Tech's smart rings,
+ *
+ *    See the LICENSE file for the full text of the MIT License.
+ *
+ * 2. Taika Software License 1 (TSL1):
+ *    - This license applies to the use of the Software with other manufacturers' smart rings, or other 
+ *      typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy.
+ *    - Contact sales@taikatech.fi to acquire such a license.
+ *    - See the COMMERCIAL_LICENSE file for the full text of the TSL1.
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
+import { TouchEvent, TouchEventMask } from '../Interfaces/Enums';
+
+type EventCallback = (...args: any[]) => void;
+type Vector3 = [number, number, number];
+
+
+class RingEventHandler {
+    private events: { [key: string]: EventCallback[] } = {};
+
+    on(event: string, callback: EventCallback): void {
+        if (!this.events[event]) {
+            this.events[event] = [];
+        }
+        this.events[event].push(callback);
+    }
+
+    off(event: string, callback: EventCallback): void {
+        if (!this.events[event]) return;
+        this.events[event] = this.events[event].filter(cb => cb !== callback);
+    }
+
+    trigger(event: string, ...args: any[]): void {
+        if (!this.events[event]) return;
+        this.events[event].forEach(callback => callback(...args));
+    }
+}
+
+export const ringEventHandler = new RingEventHandler();
+
+export function onConnected(callback: () => void): void {
+    ringEventHandler.on('connected', callback);
+}
+
+export function onDisconnected(callback: () => void): void {
+    ringEventHandler.on('disconnected', callback);
+}
+
+export function onLowBattery(callback: () => void): void {
+    ringEventHandler.on('lowBattery', callback);
+}
+
+export function onNewData(callback: (data: any) => void): void {
+    ringEventHandler.on('newData', callback);
+}
+
+export function onMotionEvent(callback: (data: Vector3) => void): void {
+    ringEventHandler.on('motionEvent', callback);
+}
+
+export function onTouchEvent(callback: (data: { 
+    active: boolean, 
+    x: number, 
+    y: number, 
+    strength: number, 
+    eventMask: TouchEventMask,
+    timestamp: number }) => void): void {
+        ringEventHandler.on('touchEvent', callback);
+}
+
+// Other event methods...
+
+/*
+
+Example Usage in Application for new callback system
+
+import { onConnected, onDisconnected, onLowBattery, onNewData } from './RingEvents';
+import { connectRing, disconnectRing } from './RingConnection';
+
+onConnected(() => {
+    console.log('Ring connected');
+});
+
+onDisconnected(() => {
+    console.log('Ring disconnected');
+});
+
+onLowBattery(() => {
+    console.log('Low battery warning');
+});
+
+onNewData((data) => {
+    console.log('New data received:', data);
+});
+
+/* 
+TODO: Add triggers like this to events from BLE 
+
+// Somewhere in your connection logic
+function connectRing() {
+    // Logic to connect the ring...
+    ringEventHandler.trigger('connected');
+}
+
+// Somewhere in your data handling logic
+function handleNewData(data: any) {
+    ringEventHandler.trigger('newData', data);
+}
+*/
