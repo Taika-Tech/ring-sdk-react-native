@@ -284,7 +284,9 @@ This software is licensed under dual licensing terms:
 
 See the `LICENSE` file for the full text of the MIT License.
 
-2. **Taika Software License 1 (TSL1)**: This license applies to the use of the Software with other manufacturers' smart rings, or other typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy. Contact sales@taikatech.fi to acquire such a license. See the `COMMERCIAL_LICENSE` file for the full text of the TSL1.
+2. **Taika Software License 1 (TSL1)**: This license applies to the use of the Software with other manufacturers' smart rings, or other typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy. Contact sales@taikatech.fi to acquire such a license.
+
+See the `COMMERCIAL_LICENSE` file for the full text of the TSL1.
 
 ## Contact
 If you have any questions or need further assistance, please contact 
