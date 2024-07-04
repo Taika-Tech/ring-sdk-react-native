@@ -128,7 +128,7 @@ If your project didn't use Bluetooth before adding the RingSDK or you are creati
    end
    ```
 
-2. **Info.plist**: Add the following entries to your `Info.plist` file to request Bluetooth permissions.
+2. **Info.plist**: Add the following entries to your `ios/MyAppName/Info.plist` file to request Bluetooth permissions.
 
    ```xml
    <key>NSBluetoothAlwaysUsageDescription</key>
