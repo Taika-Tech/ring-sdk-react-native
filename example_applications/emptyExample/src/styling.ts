@@ -29,7 +29,7 @@ const styling = StyleSheet.create({
     width: 62,
   },
   column3: {
-    fontSize: 18,
+    width: 18,
   },
   column3Text: {
     textAlign: "center",

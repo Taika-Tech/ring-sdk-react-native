@@ -32,7 +32,7 @@ import {
   onMotionEvent,
   ringEventHandler,
 } from 'ring-sdk-react-native';
-import styling from './Styling/Styling.js';
+import styling from './src/styling.ts';
 
 // Create a Bluetooth manager
 const manager = new BleManager();
@@ -103,7 +103,7 @@ const App: React.FC = () => {
     };
   }, []);
 
-  const splitValue = (value) => {
+  const splitValue = (value: string) => {
     const [integer, decimal] = value.split('.');
     return { integer, decimal };
   };
