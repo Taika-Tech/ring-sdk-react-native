@@ -108,7 +108,7 @@ class DataInitializer {
 
             if (modesData.length > 0) {
                 modesData.forEach(mode => {
-                    allModes[mode.uniqueID] = { ...mode, goToActive: {}, goToSleep: {}, modeMappings: {} };
+                    allModes[mode.uniqueID] = { ...mode, modeMappings: {} };
                 });
             } else {
                 for (const mode of defaultModes) {

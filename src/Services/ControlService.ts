@@ -54,6 +54,7 @@ enum Commands {
     RESEED_TOUCHPAD =                   0x18,
     BOOT_TO_BOOTLOADER =                0x1A,
     TOUCHPAD_DEBUG_STATE =              0x1B,
+    MAG_CALIBRATION =                   0x1C,
 }
 
 export const ControlToServerNames: { [key: number]: string } = {};
@@ -201,6 +202,10 @@ class ControlService extends BaseService {
 
   public reseedTouchpad() {
     this.sendControlCommand([Commands.RESEED_TOUCHPAD])
+  }
+
+  public async magCalibrate() {
+    await this.sendControlCommand([Commands.MAG_CALIBRATION])
   }
 
   /**
