@@ -1,7 +1,7 @@
 /* App.tsx
- *  
+ *
  * Copyright Taika Tech 2024
- * 
+ *
  * This software is licensed under dual licensing terms:
  *
  * 1. MIT License:
@@ -12,17 +12,24 @@
  *    See the LICENSE file for the full text of the MIT License.
  *
  * 2. Taika Software License 1 (TSL1):
- *    - This license applies to the use of the Software with other manufacturers' smart rings, or other 
+ *    - This license applies to the use of the Software with other manufacturers' smart rings, or other
  *      typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy.
  *    - Contact sales@taikatech.fi to acquire such a license.
  *    - See the COMMERCIAL_LICENSE file for the full text of the TSL1.
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+ */
 
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, Image, Platform } from 'react-native';
-import { BleManager } from 'react-native-ble-plx';
+import React, {useEffect, useState} from 'react';
+import {
+  SafeAreaView,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native';
+import {BleManager} from 'react-native-ble-plx';
 import {
   Ring,
   initializeRing,
@@ -31,6 +38,7 @@ import {
   onTouchEvent,
   onMotionEvent,
   ringEventHandler,
+  logBLE,
 } from 'ring-sdk-react-native';
 import styling from './src/styling.ts';
 
@@ -45,7 +53,7 @@ const App: React.FC = () => {
   const [accXValue, setAccXValue] = useState('0.00');
   const [accYValue, setAccYValue] = useState('0.00');
   const [accZValue, setAccZValue] = useState('0.00');
-  const [trail, setTrail] = useState<{ x: string, y: string }[]>([]);
+  const [trail, setTrail] = useState<{x: string; y: string}[]>([]);
 
   useEffect(() => {
     const setupSDK = async () => {
@@ -77,15 +85,44 @@ const App: React.FC = () => {
     const handleConnected = () => console.log('Ring connected!');
     const handleDisconnected = () => console.log('Ring disconnected!');
     const handleTouchEvent = (data: any) => {
-      //console.log('New touch data received:', data.x, data.y);
       setTouchpadXValue(data.x.toFixed(2));
       setTouchpadYValue(data.y.toFixed(2));
-      setTrail(prevTrail => [...prevTrail, { x: data.x.toFixed(2), y: data.y.toFixed(2) }].slice(-20));
+      setTrail(prevTrail =>
+        [...prevTrail, {x: data.x.toFixed(2), y: data.y.toFixed(2)}].slice(-20),
+      );
+      console.log(
+        `Touch event - active: ${data.touchActive}, x: ${data.x}, y: ${data.y}, strength: ${data.touchStrength}, timestamp: ${data.timestamp}`,
+      );
     };
     const handleMotionEvent = (data: any) => {
-      setAccXValue(data[0].toFixed(2));
-      setAccYValue(data[1].toFixed(2));
-      setAccZValue(data[2].toFixed(2));
+      setAccXValue(data.acc.x.toFixed(2));
+      setAccYValue(data.acc.y.toFixed(2));
+      setAccZValue(data.acc.z.toFixed(2));
+      console.log('Acc: ', data.acc.x, data.acc.y, data.acc.z);
+
+      // Logging gyroscope values
+      console.log('Gyro: ', data.gyro.x, data.gyro.y, data.gyro.z);
+
+      // Logging magnetometer values
+      console.log('Mag: ', data.mag.x, data.mag.y, data.mag.z);
+
+      // Logging IMU quaternion values
+      console.log(
+        'Imu quat: ',
+        data.quatImu.x,
+        data.quatImu.y,
+        data.quatImu.z,
+        data.quatImu.w,
+      );
+
+      // Logging MIMU quaternion values
+      console.log(
+        'Mimu quat: ',
+        data.quatMimu.x,
+        data.quatMimu.y,
+        data.quatMimu.z,
+        data.quatMimu.w,
+      );
     };
 
     // Add event handlers as callbacks
@@ -105,7 +142,7 @@ const App: React.FC = () => {
 
   const splitValue = (value: string) => {
     const [integer, decimal] = value.split('.');
-    return { integer, decimal };
+    return {integer, decimal};
   };
 
   return (
@@ -115,7 +152,8 @@ const App: React.FC = () => {
         <View style={styling.pageContainer}>
           <View style={[styling.pageSection, styling.smallMarginRight]}>
             <Text style={styling.h2}>Touchpad</Text>
-            <View style={[styling.touchPad, { width: 756 / 8, height: 2048 / 8 }]}>
+            <View
+              style={[styling.touchPad, {width: 756 / 8, height: 2048 / 8}]}>
               {trail.map((point, index) => (
                 <View
                   key={index}
@@ -150,13 +188,22 @@ const App: React.FC = () => {
                   <Text style={styling.text}>X =</Text>
                 </View>
                 <View style={styling.column2}>
-                  <Text style={[styling.text, styling.dataValue, styling.alignRight]}>{splitValue(accXValue).integer}</Text>
+                  <Text
+                    style={[
+                      styling.text,
+                      styling.dataValue,
+                      styling.alignRight,
+                    ]}>
+                    {splitValue(accXValue).integer}
+                  </Text>
                 </View>
                 <View style={styling.column3}>
                   <Text style={[styling.text, styling.dataValue]}>.</Text>
                 </View>
                 <View style={styling.column4}>
-                  <Text style={[styling.text, styling.dataValue]}>{splitValue(accXValue).decimal}</Text>
+                  <Text style={[styling.text, styling.dataValue]}>
+                    {splitValue(accXValue).decimal}
+                  </Text>
                 </View>
               </View>
               <View style={styling.tableRow}>
@@ -164,13 +211,22 @@ const App: React.FC = () => {
                   <Text style={styling.text}>Y =</Text>
                 </View>
                 <View style={styling.column2}>
-                  <Text style={[styling.text, styling.dataValue, styling.alignRight]}>{splitValue(accYValue).integer}</Text>
+                  <Text
+                    style={[
+                      styling.text,
+                      styling.dataValue,
+                      styling.alignRight,
+                    ]}>
+                    {splitValue(accYValue).integer}
+                  </Text>
                 </View>
                 <View style={styling.column3}>
                   <Text style={[styling.text, styling.dataValue]}>.</Text>
                 </View>
                 <View style={styling.column4}>
-                  <Text style={[styling.text, styling.dataValue]}>{splitValue(accYValue).decimal}</Text>
+                  <Text style={[styling.text, styling.dataValue]}>
+                    {splitValue(accYValue).decimal}
+                  </Text>
                 </View>
               </View>
               <View style={styling.tableRow}>
@@ -178,13 +234,22 @@ const App: React.FC = () => {
                   <Text style={styling.text}>Z =</Text>
                 </View>
                 <View style={styling.column2}>
-                  <Text style={[styling.text, styling.dataValue, styling.alignRight]}>{splitValue(accZValue).integer}</Text>
+                  <Text
+                    style={[
+                      styling.text,
+                      styling.dataValue,
+                      styling.alignRight,
+                    ]}>
+                    {splitValue(accZValue).integer}
+                  </Text>
                 </View>
                 <View style={styling.column3}>
                   <Text style={[styling.text, styling.dataValue]}>.</Text>
                 </View>
                 <View style={styling.column4}>
-                  <Text style={[styling.text, styling.dataValue]}>{splitValue(accZValue).decimal}</Text>
+                  <Text style={[styling.text, styling.dataValue]}>
+                    {splitValue(accZValue).decimal}
+                  </Text>
                 </View>
               </View>
             </View>

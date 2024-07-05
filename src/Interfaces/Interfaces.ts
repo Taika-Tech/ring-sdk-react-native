@@ -55,6 +55,8 @@ export interface DataConfiguration {
     defaultData:            { [key: string]: any };
 }
 
+export { Handedness };
+
 export interface IOMapping {
     modeID?:                number;
     action:                 MappingActions;
@@ -68,6 +70,14 @@ export type IOMappings = {
     [key in Gestures]?:     IOMapping;
 }
 
+export interface MotionData {
+    acc: Vector3,
+    gyro: Vector3,
+    mag: Vector3,
+    quatImu: Vector4,
+    quatMimu: Vector4,
+}
+  
 export interface MouseConfig {
     id:                     number;
     xSpeed:                 number;
@@ -178,4 +188,25 @@ export interface TouchTimestampedEventMask {
     eventTimestamp: number;
 }
 
-export { Handedness };
+
+export interface TouchData {
+    touchActive:        boolean,
+    x:                  number,
+    y:                  number,
+    touchStrength:      number,
+    timestamp:          number,
+    touchpadEventMask:  TouchEventMask,
+}
+
+export interface Vector3 {
+    x: number, 
+    y: number, 
+    z: number 
+}
+
+export interface Vector4 {
+    x: number, 
+    y: number, 
+    z: number, 
+    w: number
+}

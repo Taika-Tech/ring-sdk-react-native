@@ -36,6 +36,7 @@ import { claimPrimaryCharacteristicUUID, updateModeForIndexCharacteristicUUID } 
 import { touchpadCharacteristicUUID } from '../Services/DataService';
 import { updateCharacteristicUUID } from '../Services/UpdateService';
 import { ringEventHandler } from '../Ring/RingEvents';
+import { MotionData, TouchData } from '../Interfaces/Interfaces';
 
 class NotificationHandler {
   private connectedDevices;
@@ -75,7 +76,7 @@ class NotificationHandler {
         logBLE("data: ", byteArray);
         break;
       case updateCharacteristicUUID:
-        this.handleTouchEventUpdate(byteArray);
+        this.handleStreamEventUpdate(byteArray);
         break;
     }
   }
@@ -182,65 +183,82 @@ class NotificationHandler {
     this.ring?.sendMqtt(GestureDescriptions[gestureIncremental], modeIndexIncremental, eulersAngles, isFirstPacketIncremental);
   }
 
-  private async handleTouchEventUpdate(byteArray: number[]) {
+  private async handleStreamEventUpdate(byteArray: number[]) {
     //logBLE("Stream length: ", byteArray.length);
+    this.handleTouchEventUpdate(byteArray);
+    this.handleMotionEventUpdate(byteArray);
+  }
+
+  private async handleTouchEventUpdate(byteArray: number[]) {
     if (byteArray.length < 19) { // TP data only
       logBLE("Invalid length for touch event data");
       return;
     }
-
+  
     const dataView = new DataView(new Uint8Array(byteArray).buffer);
-
-    // Parse touch_data_t
-    const active = dataView.getUint8(0);
-    const x = dataView.getUint16(1, true);
-    const y = dataView.getUint16(3, true);
-    const strength = dataView.getUint16(5, true);
-    const touchTimestamp = dataView.getUint32(7, true);
-
-    // Parse tp_timestamped_eventmask_t
-    const eventMask = dataView.getUint32(11, true) as TouchEventMask;
-    const timestamp = dataView.getUint32(15, true);
-
-
-    logBLE(`Touch event - active: ${active}, x: ${x}, y: ${y}, strength: ${strength}, timestamp: ${timestamp}`);
-
+  
+    const parseTouchData = (dataView: DataView): TouchData => {
+      return {
+        touchActive: !!dataView.getUint8(0), // Convert to boolean
+        x: dataView.getUint16(1, true),
+        y: dataView.getUint16(3, true),
+        touchStrength: dataView.getUint16(5, true),
+        timestamp: dataView.getUint32(15, true),
+        touchpadEventMask: dataView.getUint32(11, true) as TouchEventMask,
+      };
+    };
+  
+    // Usage
+    const touchData = parseTouchData(dataView);
+  
     // Trigger the touch event
-    ringEventHandler.trigger('touchEvent', { active, x, y, strength, eventMask, timestamp });
-
+    ringEventHandler.trigger('touchEvent', touchData);
+  }
+  
+  private async handleMotionEventUpdate(byteArray: number[]) {
     if (byteArray.length < 87) {
       logBLE("Invalid length for imu event data");
       return;
     }
 
-    const accX = dataView.getFloat32(19, true);
-    const accY = dataView.getFloat32(23, true);
-    const accZ = dataView.getFloat32(27, true);
-    const gyroX = dataView.getFloat32(31, true);
-    const gyroY = dataView.getFloat32(35, true);
-    const gyroZ = dataView.getFloat32(39, true);
-    const magX = dataView.getFloat32(43, true);
-    const magY = dataView.getFloat32(47, true);
-    const magZ = dataView.getFloat32(51, true);
+    const dataView = new DataView(new Uint8Array(byteArray).buffer);
 
-    const quatImu0 = dataView.getFloat32(55, true);
-    const quatImu1 = dataView.getFloat32(59, true);
-    const quatImu2 = dataView.getFloat32(63, true);
-    const quatImu3 = dataView.getFloat32(67, true);
-
-    const quatMimu0 = dataView.getFloat32(71, true);
-    const quatMimu1 = dataView.getFloat32(75, true);
-    const quatMimu2 = dataView.getFloat32(79, true);
-    const quatMimu3 = dataView.getFloat32(83, true);
+    const parseMotionData = (dataView: DataView): MotionData => {
+      return {
+        acc: {
+          x: dataView.getFloat32(19, true),
+          y: dataView.getFloat32(23, true),
+          z: dataView.getFloat32(27, true),
+        },
+        gyro: {
+          x: dataView.getFloat32(31, true),
+          y: dataView.getFloat32(35, true),
+          z: dataView.getFloat32(39, true),
+        },
+        mag: {
+          x: dataView.getFloat32(43, true),
+          y: dataView.getFloat32(47, true),
+          z: dataView.getFloat32(51, true),
+        },
+        quatImu: {
+          x: dataView.getFloat32(55, true),
+          y: dataView.getFloat32(59, true),
+          z: dataView.getFloat32(63, true),
+          w: dataView.getFloat32(67, true),
+        },
+        quatMimu: {
+          x: dataView.getFloat32(71, true),
+          y: dataView.getFloat32(75, true),
+          z: dataView.getFloat32(79, true),
+          w: dataView.getFloat32(83, true),
+        },
+      };
+    };
     
-    //logBLE("Acc: ", accX, accY, accZ);
-    //logBLE("Gyro: ", gyroX, gyroY, gyroZ);
-    //logBLE("Mag: ", magX, magY, magZ);
-
-    //logBLE("Imu quat: ", quatImu0, quatImu1, quatImu2, quatImu3);
-    //logBLE("Mimu quat: ", quatMimu0, quatMimu1, quatMimu2, quatMimu3);
-
-    ringEventHandler.trigger('motionEvent', [accX, accY, accZ]);
+    // Usage
+    const motionData = parseMotionData(dataView);
+    
+    ringEventHandler.trigger('motionEvent', motionData);
   }
 }
 
