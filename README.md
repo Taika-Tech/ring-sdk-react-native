@@ -128,7 +128,7 @@ If your project didn't use Bluetooth before adding the RingSDK or you are creati
    end
    ```
 
-2. **Info.plist**: Add the following entries to your `Info.plist` file to request Bluetooth permissions.
+2. **Info.plist**: Add the following entries to your `ios/MyAppName/Info.plist` file to request Bluetooth permissions.
 
    ```xml
    <key>NSBluetoothAlwaysUsageDescription</key>
@@ -284,7 +284,9 @@ This software is licensed under dual licensing terms:
 
 See the `LICENSE` file for the full text of the MIT License.
 
-2. **Taika Software License 1 (TSL1)**: This license applies to the use of the Software with other manufacturers' smart rings, or other typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy. Contact sales@taikatech.fi to acquire such a license. See the `COMMERCIAL_LICENSE` file for the full text of the TSL1.
+2. **Taika Software License 1 (TSL1)**: This license applies to the use of the Software with other manufacturers' smart rings, or other typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy. Contact sales@taikatech.fi to acquire such a license.
+
+See the `COMMERCIAL_LICENSE` file for the full text of the TSL1.
 
 ## Contact
 If you have any questions or need further assistance, please contact 
