@@ -208,7 +208,7 @@ class NotificationHandler {
     // Trigger the touch event
     ringEventHandler.trigger('touchEvent', { active, x, y, strength, eventMask, timestamp });
 
-    if (byteArray.length < 31) {
+    if (byteArray.length < 87) {
       logBLE("Invalid length for imu event data");
       return;
     }
@@ -216,6 +216,30 @@ class NotificationHandler {
     const accX = dataView.getFloat32(19, true);
     const accY = dataView.getFloat32(23, true);
     const accZ = dataView.getFloat32(27, true);
+    const gyroX = dataView.getFloat32(31, true);
+    const gyroY = dataView.getFloat32(35, true);
+    const gyroZ = dataView.getFloat32(39, true);
+    const magX = dataView.getFloat32(43, true);
+    const magY = dataView.getFloat32(47, true);
+    const magZ = dataView.getFloat32(51, true);
+
+    const quatImu0 = dataView.getFloat32(55, true);
+    const quatImu1 = dataView.getFloat32(59, true);
+    const quatImu2 = dataView.getFloat32(63, true);
+    const quatImu3 = dataView.getFloat32(67, true);
+
+    const quatMimu0 = dataView.getFloat32(71, true);
+    const quatMimu1 = dataView.getFloat32(75, true);
+    const quatMimu2 = dataView.getFloat32(79, true);
+    const quatMimu3 = dataView.getFloat32(83, true);
+    
+    //logBLE("Acc: ", accX, accY, accZ);
+    //logBLE("Gyro: ", gyroX, gyroY, gyroZ);
+    //logBLE("Mag: ", magX, magY, magZ);
+
+    //logBLE("Imu quat: ", quatImu0, quatImu1, quatImu2, quatImu3);
+    //logBLE("Mimu quat: ", quatMimu0, quatMimu1, quatMimu2, quatMimu3);
+
     ringEventHandler.trigger('motionEvent', [accX, accY, accZ]);
   }
 }
