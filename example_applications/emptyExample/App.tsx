@@ -95,7 +95,7 @@ const App: React.FC = () => {
     onMotionEvent(handleMotionEvent);
 
     return () => {
-      // Clean up the event listeners when the component unmounts
+      // Clean up the event handler callbacks when the component unmounts
       ringEventHandler.off('connected', handleConnected);
       ringEventHandler.off('disconnected', handleDisconnected);
       ringEventHandler.off('touchEvent', handleTouchEvent);
