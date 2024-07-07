@@ -69,7 +69,6 @@ To create a new React Native project and integrate the RingSDK, follow these ste
 
   ```sh
    npm install ring-sdk-react-native
-   cd ringsdk
   ```
 
 3. **iOS Only: Install CocoaPods Dependencies:**
