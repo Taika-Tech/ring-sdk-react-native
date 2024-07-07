@@ -240,13 +240,13 @@ class NotificationHandler {
           y: dataView.getFloat32(47, true),
           z: dataView.getFloat32(51, true),
         },
-        quatImu: {
+        orientationRelative: {
           x: dataView.getFloat32(55, true),
           y: dataView.getFloat32(59, true),
           z: dataView.getFloat32(63, true),
           w: dataView.getFloat32(67, true),
         },
-        quatMimu: {
+        orientationAbsolute: {
           x: dataView.getFloat32(71, true),
           y: dataView.getFloat32(75, true),
           z: dataView.getFloat32(79, true),

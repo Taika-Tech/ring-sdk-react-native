@@ -111,24 +111,7 @@ If your project didn't use Bluetooth before adding the RingSDK or you are creati
 
 ### iOS Setup
 
-1. **Podfile Configuration**: Add the following lines to your `ios/Podfile` to include the necessary Bluetooth permissions.
-
-   ```ruby
-   target 'YourAppTarget' do
-     # Add the following permissions for Bluetooth usage
-     pod 'react-native-ble-plx', :path => '../node_modules/react-native-ble-plx'
-
-     post_install do |installer|
-       installer.pods_project.targets.each do |target|
-         target.build_configurations.each do |config|
-           config.build_settings['CLANG_ENABLE_MODULES'] = 'YES'
-         end
-       end
-     end
-   end
-   ```
-
-2. **Info.plist**: Add the following entries to your `ios/MyAppName/Info.plist` file to request Bluetooth permissions.
+1. **Info.plist**: Add the following entries to your `ios/MyAppName/Info.plist` file to request Bluetooth permissions.
 
    ```xml
    <key>NSBluetoothAlwaysUsageDescription</key>
@@ -264,6 +247,118 @@ Here’s a simplified example app that shows how to use the RingSDK to show live
  - **Event Handlers:** Event handlers are set up to handle touch events from the ring.
    
 For more comprehensive examples and advanced usage, please refer to the [example applications](https://github.com/Taika-Tech/ring-sdk-react-native/example_applications/) in the RingSDK GitHub repository.
+
+Certainly! Here is the bitmask section formatted for your README file, along with an explanation on how it is used in the `TouchData` struct:
+
+## API Reference
+
+### Context Interfaces
+
+- **MotionData**
+  ```typescript
+  interface MotionData {
+    acc: Vector3;
+    gyro: Vector3;
+    mag: Vector3;
+    orientationRelative: Vector4;
+    orientationAbsolute: Vector4;
+  }
+  ```
+
+- **Vector3**
+  ```typescript
+  interface Vector3 {
+    x: number;
+    y: number;
+    z: number;
+  }
+  ```
+
+- **Vector4**
+  ```typescript
+  interface Vector4 {
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+  }
+  ```
+
+- **TouchData**
+  ```typescript
+  interface TouchData {
+    touchActive: boolean;
+    x: number;
+    y: number;
+    touchStrength: number;
+    timestamp: number;
+    touchpadEventMask: TouchEventMask;
+  }
+  ```
+
+### Touch Event Bitmask
+
+The `TouchEventMask` is a bitmask that represents various touch events. Bitmasks allow us to represent multiple boolean flags in a single number, with each bit in the number representing a different flag.
+
+#### TouchEvent Enum
+
+  ```typescript
+  export enum TouchEvent {
+      TOUCH_ACTIVE = 1 << 0,          // 1st bit, hexadecimal 1
+      TOUCH_START = 1 << 1,           // 2nd bit, hexadecimal 2
+      TOUCH_END = 1 << 2,             // 3rd bit, hexadecimal 4
+      TOUCH_TOP = 1 << 3,             // 4th bit, hexadecimal 8 (0x00000008)
+      TOUCH_SIDE = 1 << 4,            // 5th bit, hexadecimal 10 (0x00000010)
+
+      GESTURE_EVENT = 1 << 5,         // 6th bit, hex 20 
+      LOW_POWER_OUTPUT = 1 << 6,      // 7th bit, hex 40 
+
+      HOLD_START = 1 << 8,            // 9th bit, hex 80
+      HOLD_RELEASE = 1 << 9,          // 10th bit, hex 100
+      HOLD_ONGOING = 1 << 10,         // 11th bit, hex 200
+
+      SINGLE_TAP = 1 << 11,           // 12th bit, hex 400
+      DOUBLE_TAP = 1 << 12,           // 13th bit
+      TRIPLE_TAP = 1 << 13,           // 14th bit
+
+      SLOW_SWIPE_UP = 1 << 16,        // 17th bit 
+      SLOW_SWIPE_DOWN = 1 << 17,      // 18th bit 
+      SLOW_SWIPE_LEFT = 1 << 18,      // 19th bit 
+      SLOW_SWIPE_RIGHT = 1 << 19,     // 20th bit
+
+      SWIPE_UP = 1 << 20,             // 21st bit
+      SWIPE_DOWN = 1 << 21,           // 22nd bit 
+      SWIPE_LEFT = 1 << 22,           // 23rd bit
+      SWIPE_RIGHT = 1 << 23,          // 24th bit
+
+      PM_ACTIVE = 1 << 26,            // 27th bit
+      PM_IDLE = 1 << 27,              // 28th bit
+      PM_LOW_POWER = 1 << 28,         // 29th bit
+      PM_TO_ACTIVE = 1 << 29,         // 30th bit
+      PM_TO_IDLE = 1 << 30,           // 31st bit 
+      PM_TO_LOW_POWER = 1 << 31       // 32nd bit
+  }
+    
+  export type TouchEventMask = number;
+  ```
+
+### Usage in TouchData
+
+In the `TouchData` struct, the `touchpadEventMask` field uses the `TouchEventMask` type to represent various touch events using a bitmask. This allows multiple touch events to be captured and represented in a single number. For example, if multiple touch events occur simultaneously, they can be combined using the bitwise OR operator (`|`), and individual events can be checked using the bitwise AND operator (`&`).
+
+#### Example Usage
+
+To set multiple touch events, combine them using the bitwise OR operator (`|`):
+```typescript
+let events: TouchEventMask = TouchEvent.TOUCH_START | TouchEvent.SINGLE_TAP | TouchEvent.SWIPE_UP;
+```
+
+To check if a specific touch event is set, use the bitwise AND operator (`&`):
+```typescript
+if (events & TouchEvent.SINGLE_TAP) {
+  // Single tap event is set
+}
+```
 
 ## Contributing
 

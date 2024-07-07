@@ -21,14 +21,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Platform,
-} from 'react-native';
+import {SafeAreaView, Text, View, TouchableOpacity} from 'react-native';
 import {BleManager} from 'react-native-ble-plx';
 import {
   Ring,
@@ -38,7 +31,6 @@ import {
   onTouchEvent,
   onMotionEvent,
   ringEventHandler,
-  logBLE,
 } from 'ring-sdk-react-native';
 import styling from './src/styling.ts';
 
@@ -106,22 +98,22 @@ const App: React.FC = () => {
       // Logging magnetometer values
       console.log('Mag: ', data.mag.x, data.mag.y, data.mag.z);
 
-      // Logging IMU quaternion values
+      // Logging Relative orientation quaternion values
       console.log(
-        'Imu quat: ',
-        data.quatImu.x,
-        data.quatImu.y,
-        data.quatImu.z,
-        data.quatImu.w,
+        'Relative orientation: ',
+        data.quaternionRelative.x,
+        data.quaternionRelative.y,
+        data.quaternionRelative.z,
+        data.quaternionRelative.w,
       );
 
-      // Logging MIMU quaternion values
+      // Logging Aboslute orientation quaternion values
       console.log(
-        'Mimu quat: ',
-        data.quatMimu.x,
-        data.quatMimu.y,
-        data.quatMimu.z,
-        data.quatMimu.w,
+        'Aboslute orientation: ',
+        data.quaternionAbsolute.x,
+        data.quaternionAbsolute.y,
+        data.quaternionAbsolute.z,
+        data.quaternionAbsolute.w,
       );
     };
 

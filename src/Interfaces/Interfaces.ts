@@ -74,8 +74,8 @@ export interface MotionData {
     acc: Vector3,
     gyro: Vector3,
     mag: Vector3,
-    quatImu: Vector4,
-    quatMimu: Vector4,
+    quaternionRelative: Vector4,
+    quaternionAbsolute: Vector4,
 }
   
 export interface MouseConfig {
