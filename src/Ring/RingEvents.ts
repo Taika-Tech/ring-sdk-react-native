@@ -65,7 +65,7 @@ export function onNewData(callback: (data: any) => void): void {
     ringEventHandler.on('newData', callback);
 }
 
-export function onMotionEvent(callback: (data: Vector3) => void): void {
+export function onMotionEvent(callback: (data: MotionData) => void): void {
     ringEventHandler.on('motionEvent', callback);
 }
 
