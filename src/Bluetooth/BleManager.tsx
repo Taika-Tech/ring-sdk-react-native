@@ -182,6 +182,34 @@ class TaikaBleManager {
       logBLE(`Error writing to characteristic ${characteristicUUID}: ${(error as Error).message}`);
     }
   }
+    /**
+   * @brief Writes data to given characteristic UUID.
+   * @param characteristicUUID The characteristic UUID string.
+   * @param data Array of numbers to write.
+   */
+    public async writeWithoutResponse(characteristicUUID: string, data: number[], serviceUUID: string) {
+      if (!this.connectionHandler) {
+        logBLE("No connection handler.");
+        return;
+      }
+      if (!this.connectionHandler.TaikaRing) {
+        logBLE("Ring not connected.");
+        return;
+      }
+      if (!this.ringReadyForReadWrite) {
+        logBLE("Cannot read or write before characteristic discovery is complete.");
+        return;
+      }
+  
+      //logBLE(`wrote: ${data} to ${serviceUUID}:${characteristicUUID}`);
+      const base64Data = Buffer.from(new Uint8Array(data)).toString('base64');
+      try {
+        await this.connectionHandler.TaikaRing.writeCharacteristicWithoutResponseForService(serviceUUID, characteristicUUID, base64Data);
+        logBLE(`Data written to ${characteristicUUID}`);
+      } catch (error) {
+        logBLE(`Error writing to characteristic ${characteristicUUID}: ${(error as Error).message}`);
+      }
+    }
 
   /*************************************************************************************** /
   *  BLE write operation

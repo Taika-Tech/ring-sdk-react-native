@@ -89,6 +89,31 @@ class BaseService {
       return false;
     }
   }
+
+    /**
+   * Write data to a characteristic belonging the service. 
+   * @param data list of numbers to write to the characteristic
+   * @param fromCharacteristic the characteristic to write to
+   * @return true if write succesfull, false otherwise
+   */
+    public async writeWithoutResponse(data: number[], toCharacteristic: string): Promise<boolean> {
+      if (!this.characteristicUUIDs.includes(toCharacteristic)) {
+        logBLE("Invalid characteristic at write.");
+        return false;
+      }
+      if (this.bleManager === undefined) {
+        logBLE("Invalid blemanager at write.");
+        return false;
+      }
+      
+      
+      try {
+        await this.bleManager.writeWithoutResponse(toCharacteristic, data, this.uuid);
+        return true;
+      } catch {
+        return false;
+      }
+    }
 }
 
 export default BaseService;
