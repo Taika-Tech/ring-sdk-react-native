@@ -73,6 +73,9 @@ class ConnectionHandler {
 
   public async startConnectionHandler() {
     try {
+      // Does not work on konstas debug android without this
+      await requestBluetoothPermission();
+
       this.state = await this.manager.state();
 
       this.manager.onStateChange((state) => {
