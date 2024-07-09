@@ -21,6 +21,7 @@
 */
 
 import { TouchEvent, TouchEventMask } from '../Interfaces/Enums';
+import { MotionData } from '../Interfaces/Interfaces';
 
 type EventCallback = (...args: any[]) => void;
 type Vector3 = [number, number, number];
