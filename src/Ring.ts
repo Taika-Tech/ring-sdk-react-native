@@ -196,6 +196,8 @@ class Ring {
      */
     public async setMouseConfig(data: MouseConfig) {
         this.mouseConfig = data;
+        await this.controllers["mouseConfiguration"].saveData(data, "id = ?", [1]);
+
         if (this.debouncedUpdateMouseConfig) {
             this.debouncedUpdateMouseConfig(data);  // Debounced backend update
         } else {
