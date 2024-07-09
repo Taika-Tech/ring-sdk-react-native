@@ -78,7 +78,7 @@ export const tableConfigurations: { [key: string]: DataConfiguration }  = {
     },
     handedness: {
         tableName: 'Handedness',
-        fields: ['id, userHandedness'],
+        fields: ['id', 'userHandedness'],
         types: ['INTEGER', 'INTEGER'],
         primaryKey: ['id'],
         defaultData: {
