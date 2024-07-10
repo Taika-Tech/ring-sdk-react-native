@@ -474,6 +474,15 @@ class Ring {
                 return 'ringModeOne'; // Default fallback, consider handling errors
         }
     };
+
+    public async getTable(tableName: string) {
+        try {
+            const tableData = await this.controllers[tableName].getData();
+            return tableData;
+        } catch (error) {
+            console.error(`Failed to retrieve ${tableName}: `, error);
+        }
+    }   
 }
 
 export default Ring;
