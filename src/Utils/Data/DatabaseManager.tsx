@@ -109,11 +109,17 @@ class DatabaseManager {
                             let sql = `CREATE TABLE IF NOT EXISTS ${tableName} (`;
                             sql += columns.map(col => {
                                 return `${col.name} ${col.type}` +
-                                    (col.primaryKey ? ' PRIMARY KEY' : '') +
                                     (col.notNull ? ' NOT NULL' : '');
                             }).join(', ');
+    
+                            // Handle composite primary key
+                            const primaryKeys = columns.filter(col => col.primaryKey).map(col => col.name);
+                            if (primaryKeys.length > 0) {
+                                sql += `, PRIMARY KEY (${primaryKeys.join(', ')})`;
+                            }
+    
                             sql += ');';
-
+    
                             tx.executeSql(sql, [], () => {
                                 logSQL(`${tableName} table created successfully`);
                                 resolve();
