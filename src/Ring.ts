@@ -23,15 +23,15 @@
 // Imports
 import TaikaBleManager from './Bluetooth/BleManager';
 import GenericDataController from './Utils/Data/GenericDataController';
-import { 
-    AppConfig, 
-    IOMappings, 
-    MouseConfig, 
-    MQTTConfiguration, 
-    RingMode, 
-    RingModes, 
-    IOMapping, 
-    RingBleConfig, 
+import {
+    AppConfig,
+    IOMappings,
+    MouseConfig,
+    MQTTConfiguration,
+    RingMode,
+    RingModes,
+    IOMapping,
+    RingBleConfig,
     RingVersion
 } from './Interfaces/Interfaces';
 import * as DefaultConfigs from './Config/TableConfigurations';
@@ -59,7 +59,7 @@ class Ring {
     private observers: (() => void)[] = [];
 
     // BLE & Services
-    private bleManager:  TaikaBleManager | undefined;
+    private bleManager: TaikaBleManager | undefined;
     public devInfoService: DeviceInformationService = new DeviceInformationService();
     public controlService: ControlService = new ControlService();
     public batteryService: BatteryService = new BatteryService();
@@ -120,7 +120,7 @@ class Ring {
         this.allModes = allModes;
         this.ioMappings = ioMappings;
 
-        
+
         this.mqttConfig = await dataInitializer.initializeMQTTConfig();
         this.bleInfo = await dataInitializer.initializeBLEConfig();
         // These need to be initialized before setting up services
@@ -141,7 +141,7 @@ class Ring {
 
         this.controlService.setConnectedDevices(connectedDevices);
         this.modeService.setConnectedDevices(connectedDevices);
-        
+
 
         // Set up debounced update function in constructor to make type clear for compiler
         this.debouncedUpdateMouseConfig = debounce(this.updateMouseConfig, 200);
@@ -237,7 +237,7 @@ class Ring {
     /**
      * Sets the current ring modes (i.e. uniqueID of a mode object assigned to mode 1, 2, and 3) and saves them to the database.
      * @param modes - The new ring modes.
-     */    
+     */
     public async setCurrentRingModes(modes: RingModes) {
         this.ringModes = modes;
         await this.controllers["currentRingModes"].saveData(modes, "id = ?", [1]);
@@ -342,7 +342,7 @@ class Ring {
         return await this.batteryService.readBatteryLevel();
     }
 
-    
+
     public async rssi(): Promise<number> {
         if (!this.bleManager) {
             return -1;
@@ -350,7 +350,7 @@ class Ring {
 
         return await this.bleManager.ringRSSI();
     }
-    
+
 
     public firmwareVersion(): RingVersion | undefined {
         if (this.bleManager == undefined) {
@@ -435,6 +435,8 @@ class Ring {
                 return Mappings.MQTTMapping;
             case TaikaModeType.PresentationTool:
                 return Mappings.presentationMapping;
+            case TaikaModeType.Influencer:
+                return Mappings.influencerMapping;
             default:
                 return Mappings.blankMapping; // Return blank for other types
         }
@@ -482,7 +484,7 @@ class Ring {
         } catch (error) {
             console.error(`Failed to retrieve ${tableName}: `, error);
         }
-    }   
+    }
 }
 
 export default Ring;
