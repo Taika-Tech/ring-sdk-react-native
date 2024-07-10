@@ -22,7 +22,7 @@
 // External imports
 import React, { ReactNode, createContext, useEffect, useState } from 'react';
 // SDK imports
-import RingNew from '../Ring';
+import Ring from '../Ring';
 import { AppConfig, RingContextType, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig } from '../Interfaces/Interfaces';
 import { defaultMouseConfig, defaultHandedness, defaultMQTTConfig, defaultRingModes, defaultBleConfig } from '../Config/TableConfigurations';
 import { ModeIndex } from '../Interfaces/Enums';
@@ -70,7 +70,7 @@ export const RingContext = createContext<RingContextType>({
 
 // Provider Component
 export const RingProvider: React.FC<Props> = ({ children }) => {
-    const ring = RingNew.getInstance();
+    const ring = Ring.getInstance();
 
     const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
     const [mouseConfig, setMouseConfig] = useState<MouseConfig>(ring.mouseConfig || defaultMouseConfig as MouseConfig);
