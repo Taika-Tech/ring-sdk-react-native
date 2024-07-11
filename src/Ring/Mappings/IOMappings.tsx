@@ -35,7 +35,7 @@ export const allowedActions: { [key: number]: MappingActions[] } = {
         MappingActions.NoAction, MappingActions.MQTT
     ],
     [TaikaModeType.ComputerMouse]: [
-        MappingActions.NoAction, MappingActions.LeftKey, MappingActions.RightKey, MappingActions.Cursor, MappingActions.LeftClick, MappingActions.DoubleClick, MappingActions.RightClick
+        MappingActions.NoAction, MappingActions.LeftKey, MappingActions.RightKey, MappingActions.Cursor, MappingActions.LeftClick, MappingActions.DoubleClick, MappingActions.RightClick, MappingActions.DragAndDrop, 
     ],
    /* [TaikaModeType.TvControl]: [
         MappingActions.NoAction, MappingActions.PlayPause
