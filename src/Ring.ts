@@ -485,6 +485,28 @@ class Ring {
             console.error(`Failed to retrieve ${tableName}: `, error);
         }
     }
+
+    public async deleteRow(tableName: string, condition: string, conditionParams: any[]): Promise<boolean> {
+        try {
+            const controller = this.controllers[tableName];
+            if (!controller) {
+                console.error(`Table '${tableName}' not found.`);
+                return false;
+            }
+
+            const deleted = await controller.deleteData(condition, conditionParams);
+            if (deleted) {
+                console.log(`Deleted row from ${tableName} successfully.`);
+                return true;
+            } else {
+                console.error(`Failed to delete row from ${tableName}.`);
+                return false;
+            }
+        } catch (error) {
+            console.error(`Error deleting row from ${tableName}:`, error);
+            return false;
+        }
+    }
 }
 
 export default Ring;
