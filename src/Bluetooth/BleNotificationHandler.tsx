@@ -184,7 +184,7 @@ class NotificationHandler {
   }
 
   private async handleStreamEventUpdate(byteArray: number[]) {
-    //logBLE("Stream length: ", byteArray.length);
+    logBLE("Stream length: ", byteArray.length);
     this.handleTouchEventUpdate(byteArray);
     this.handleMotionEventUpdate(byteArray);
   }

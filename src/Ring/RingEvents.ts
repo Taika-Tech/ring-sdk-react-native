@@ -21,7 +21,7 @@
 */
 
 import { TouchEvent, TouchEventMask } from '../Interfaces/Enums';
-import { MotionData } from '../Interfaces/Interfaces';
+import { MotionData, TouchData } from '../Interfaces/Interfaces';
 
 type EventCallback = (...args: any[]) => void;
 type Vector3 = [number, number, number];
@@ -70,14 +70,8 @@ export function onMotionEvent(callback: (data: MotionData) => void): void {
     ringEventHandler.on('motionEvent', callback);
 }
 
-export function onTouchEvent(callback: (data: { 
-    active: boolean, 
-    x: number, 
-    y: number, 
-    strength: number, 
-    eventMask: TouchEventMask,
-    timestamp: number }) => void): void {
-        ringEventHandler.on('touchEvent', callback);
+export function onTouchEvent(callback: (data: TouchData) => void): void {
+    ringEventHandler.on('touchEvent', callback);
 }
 
 // Other event methods...
