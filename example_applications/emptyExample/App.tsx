@@ -35,7 +35,7 @@ import {
   TouchData,
 } from 'ring-sdk-react-native';
 import styling from './src/styling.ts';
-import {debounce, throttle} from 'lodash';
+import {throttle} from 'lodash';
 
 // Create a Bluetooth manager
 const manager = new BleManager();
@@ -83,11 +83,11 @@ const App: React.FC = () => {
     const handleTouchEvent = throttle((data: TouchData) => {
       setTouchpadXValue(data.x.toFixed(2));
       setTouchpadYValue(data.y.toFixed(2));
-      setTrail((prevTrail) =>
-        [...prevTrail, { x: data.x.toFixed(2), y: data.y.toFixed(2) }].slice(-20)
+      setTrail(prevTrail =>
+        [...prevTrail, {x: data.x.toFixed(2), y: data.y.toFixed(2)}].slice(-20),
       );
       console.log(
-        `Touch event - active: ${data.touchActive}, x: ${data.x}, y: ${data.y}, strength: ${data.touchStrength}, timestamp: ${data.timestamp}`
+        `Touch event - active: ${data.touchActive}, x: ${data.x}, y: ${data.y}, strength: ${data.touchStrength}, timestamp: ${data.timestamp}`,
       );
     }, 50); // Update every 100ms
 
@@ -109,7 +109,7 @@ const App: React.FC = () => {
         data.orientationRelative.x,
         data.orientationRelative.y,
         data.orientationRelative.z,
-        data.orientationRelative.w
+        data.orientationRelative.w,
       );
 
       // Logging Absolute orientation quaternion values
@@ -118,7 +118,7 @@ const App: React.FC = () => {
         data.orientationAbsolute.x,
         data.orientationAbsolute.y,
         data.orientationAbsolute.z,
-        data.orientationAbsolute.w
+        data.orientationAbsolute.w,
       );
     }, 50); // Update every 100ms
 
