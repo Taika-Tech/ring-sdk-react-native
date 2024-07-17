@@ -106,7 +106,7 @@ const App: React.FC = () => {
       // Logging magnetometer values
       console.log('Mag: ', data.mag.x, data.mag.y, data.mag.z);
 
-      // Logging IMU quaternion values
+      // Logging relative orientation quaternion values
       console.log(
         'Imu quat: ',
         data.quatImu.x,
@@ -115,7 +115,7 @@ const App: React.FC = () => {
         data.quatImu.w,
       );
 
-      // Logging MIMU quaternion values
+      // Logging absolute orientation quaternion values
       console.log(
         'Mimu quat: ',
         data.quatMimu.x,
