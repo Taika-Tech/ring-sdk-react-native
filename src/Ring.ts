@@ -387,6 +387,17 @@ class Ring {
     }
 
     /**
+     * Returns wether the mqtt is connected
+     */
+    public isMQTTConnected(): Boolean {
+        if (this.MQTTClient) {
+            return this.MQTTClient.isConnected();
+        }
+        return false;
+    }
+
+
+    /**
      * Sends an MQTT packet.
      * @param gestureName - Name of the gesture.
      * @param modeIndex - Index of the mode.

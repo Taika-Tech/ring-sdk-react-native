@@ -76,6 +76,10 @@ class MQTTClient {
     public static getInstance():  MQTTClient | null  {
         return this.instance;
     }
+    
+    public isConnected() {
+        return this.client?.isConnected();
+    }
 
     private connect() {
         // Check if the client already exists and is connected
@@ -111,7 +115,6 @@ class MQTTClient {
     
     public onConnect() {
         logMQTT("TaikaMQTT: Connected to MQTT broker");
-        Alert.alert("MQTT: connected to broker.");
 
         if (this.testConnectionCallback) {
             this.testConnectionCallback({ success: true, message: "Connected successfully to MQTT broker." });
