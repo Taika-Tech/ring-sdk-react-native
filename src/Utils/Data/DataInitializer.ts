@@ -22,30 +22,30 @@
 
 // src/Utils/DataInitializer.ts
 import GenericDataController from './GenericDataController';
-import { 
-    AppConfig, 
-    MQTTConfiguration, 
-    MouseConfig, 
-    Handedness, 
-    RingModes, 
-    IOMapping, 
-    RingBleConfig, 
+import {
+    AppConfig,
+    MQTTConfiguration,
+    MouseConfig,
+    Handedness,
+    RingModes,
+    IOMapping,
+    RingBleConfig,
     RingMode,
     Controllers
 } from '../../Interfaces/Interfaces';
-import { 
-    defaultAppConfig, 
-    defaultMQTTConfig, 
-    defaultMouseConfig, 
-    defaultHandedness, 
-    defaultRingModes, 
-    defaultBleConfig, 
-    tableConfigurations 
+import {
+    defaultAppConfig,
+    defaultMQTTConfig,
+    defaultMouseConfig,
+    defaultHandedness,
+    defaultRingModes,
+    defaultBleConfig,
+    tableConfigurations
 } from '../../Config/TableConfigurations';
 import { Gestures, TaikaModeType } from '../../Interfaces/Enums';
 import defaultModes from '../../Ring/Ring-Mode/RingModes';
 import { IOMappings } from '../../Interfaces/Interfaces';
-import { musicMapping, mouseMapping, MQTTMapping, presentationMapping, blankMapping } from '../../Ring/Mappings/IOMappings';
+import { musicMapping, mouseMapping, MQTTMapping, influencerMapping, presentationMapping, blankMapping } from '../../Ring/Mappings/IOMappings';
 import { logApp } from '../Logging/TaikaLog';
 
 class DataInitializer {
@@ -57,12 +57,12 @@ class DataInitializer {
             this.controllers[key] = new GenericDataController(tableConfigurations[key]);
             logApp(this.controllers[key]);
         });*/
-            // Dynamically create a controller for each table configuration
+        // Dynamically create a controller for each table configuration
         this.controllers = Object.keys(tableConfigurations).reduce((acc: Controllers, key: string) => {
             acc[key] = new GenericDataController(tableConfigurations[key]);
             return acc;
         }, {});
-    
+
         return this.controllers;
     }
 
@@ -113,6 +113,8 @@ class DataInitializer {
             } else {
                 for (const mode of defaultModes) {
                     allModes[mode.uniqueID] = mode;
+                    const { modeMappings, ...modeData } = mode; // Extract only relevant mode data
+                    await this.controllers["allModes"].saveData(modeData, "uniqueID = ?", [mode.uniqueID]);
                 }
             }
 
@@ -132,6 +134,7 @@ class DataInitializer {
                         if (mapping != undefined) {
                             mapping.modeID = mode.uniqueID;
                             ioMappings.push(mapping);
+                            await this.controllers["IOMappings"].saveData(mapping, "modeID = ? AND gesture = ?", [mapping.modeID, mapping.gesture]);
                         }
                     }
                 }
@@ -179,6 +182,8 @@ class DataInitializer {
                 return MQTTMapping;
             case TaikaModeType.PresentationTool:
                 return presentationMapping;
+            case TaikaModeType.Influencer:
+                return influencerMapping;
             default:
                 return blankMapping;
         }

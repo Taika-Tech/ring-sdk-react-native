@@ -21,14 +21,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Platform,
-} from 'react-native';
+import {SafeAreaView, Text, View, TouchableOpacity} from 'react-native';
 import {BleManager} from 'react-native-ble-plx';
 import {
   Ring,
@@ -38,9 +31,11 @@ import {
   onTouchEvent,
   onMotionEvent,
   ringEventHandler,
-  logBLE,
+  MotionData,
+  TouchData,
 } from 'ring-sdk-react-native';
 import styling from './src/styling.ts';
+import {throttle} from 'lodash';
 
 // Create a Bluetooth manager
 const manager = new BleManager();
@@ -84,7 +79,8 @@ const App: React.FC = () => {
     // Event handlers for ring events
     const handleConnected = () => console.log('Ring connected!');
     const handleDisconnected = () => console.log('Ring disconnected!');
-    const handleTouchEvent = (data: any) => {
+
+    const handleTouchEvent = throttle((data: TouchData) => {
       setTouchpadXValue(data.x.toFixed(2));
       setTouchpadYValue(data.y.toFixed(2));
       setTrail(prevTrail =>
@@ -93,8 +89,9 @@ const App: React.FC = () => {
       console.log(
         `Touch event - active: ${data.touchActive}, x: ${data.x}, y: ${data.y}, strength: ${data.touchStrength}, timestamp: ${data.timestamp}`,
       );
-    };
-    const handleMotionEvent = (data: any) => {
+    }, 50); // Update every 100ms
+
+    const handleMotionEvent = throttle((data: MotionData) => {
       setAccXValue(data.acc.x.toFixed(2));
       setAccYValue(data.acc.y.toFixed(2));
       setAccZValue(data.acc.z.toFixed(2));
@@ -108,22 +105,22 @@ const App: React.FC = () => {
 
       // Logging relative orientation quaternion values
       console.log(
-        'Imu quat: ',
-        data.quatImu.x,
-        data.quatImu.y,
-        data.quatImu.z,
-        data.quatImu.w,
+        'Relative orientation: ',
+        data.orientationRelative.x,
+        data.orientationRelative.y,
+        data.orientationRelative.z,
+        data.orientationRelative.w,
       );
 
       // Logging absolute orientation quaternion values
       console.log(
-        'Mimu quat: ',
-        data.quatMimu.x,
-        data.quatMimu.y,
-        data.quatMimu.z,
-        data.quatMimu.w,
+        'Absolute orientation: ',
+        data.orientationAbsolute.x,
+        data.orientationAbsolute.y,
+        data.orientationAbsolute.z,
+        data.orientationAbsolute.w,
       );
-    };
+    }, 50); // Update every 100ms
 
     // Add event handlers as callbacks
     onConnected(handleConnected);

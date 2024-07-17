@@ -31,7 +31,8 @@ import { ringEventHandler } from '../Ring/RingEvents';
 import { dataServiceUUID } from '../Services/DataService';
 import { Buffer } from 'buffer';
 
-type Callback = () => void;
+//type Callback = () => void;
+type Callback = (...args: any[]) => void | Promise<void>;
 
 class ConnectionHandler {
   public TaikaRing?: Device;
@@ -73,6 +74,9 @@ class ConnectionHandler {
 
   public async startConnectionHandler() {
     try {
+      // Does not work on konstas debug android without this
+      await requestBluetoothPermission();
+
       this.state = await this.manager.state();
 
       this.manager.onStateChange((state) => {
@@ -251,8 +255,9 @@ class ConnectionHandler {
         name: this.TaikaRing.name || defaultBleConfig.name,
       });
     }
+    await Promise.all(this.ringReadyCallbacks.map(callback => callback()));
 
-    this.ringReadyCallbacks.forEach(callback => callback());
+    //this.ringReadyCallbacks.forEach(callback => callback());
   }
 
   private async restoreStateFunction(restoredState: any) {

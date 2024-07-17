@@ -51,7 +51,7 @@ export const tableConfigurations: { [key: string]: DataConfiguration }  = {
         tableName: 'MQTTConfiguration',
         fields: ['brokerIP', 'port', 'clientID', 'username', 'password'],
         types: ['TEXT', 'INTEGER', 'TEXT', 'TEXT', 'TEXT'],
-        primaryKey: ['brokerIP, port'],
+        primaryKey: ['brokerIP', 'port'],
         defaultData: {
             brokerIP: '1.2.3.4',
             port: 1884,
@@ -78,7 +78,7 @@ export const tableConfigurations: { [key: string]: DataConfiguration }  = {
     },
     handedness: {
         tableName: 'Handedness',
-        fields: ['id, userHandedness'],
+        fields: ['id', 'userHandedness'],
         types: ['INTEGER', 'INTEGER'],
         primaryKey: ['id'],
         defaultData: {

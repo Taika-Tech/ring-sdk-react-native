@@ -38,7 +38,7 @@ class OtaDfuService extends BaseService {
   }
 
   public async sendOtaDfuData(data: number[]): Promise<boolean> {
-    return await this.write(data, otaDfuDataCharacteristicUUID);
+    return await this.writeWithoutResponse(data, otaDfuDataCharacteristicUUID);
   }
 }
 
