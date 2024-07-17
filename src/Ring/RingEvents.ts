@@ -20,7 +20,6 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { TouchEvent, TouchEventMask } from '../Interfaces/Enums';
 import { MotionData, TouchData } from '../Interfaces/Interfaces';
 
 type EventCallback = (...args: any[]) => void;
@@ -68,7 +67,7 @@ export function onNewData(callback: (data: any) => void): void {
 
 export function onMotionEvent(callback: (data: MotionData) => void): void {
     ringEventHandler.on('motionEvent', callback);
-}
+  }
 
 export function onTouchEvent(callback: (data: TouchData) => void): void {
     ringEventHandler.on('touchEvent', callback);

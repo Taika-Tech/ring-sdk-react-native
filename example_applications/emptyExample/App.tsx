@@ -103,7 +103,7 @@ const App: React.FC = () => {
       // Logging magnetometer values
       console.log('Mag: ', data.mag.x, data.mag.y, data.mag.z);
 
-      // Logging Relative orientation quaternion values
+      // Logging relative orientation quaternion values
       console.log(
         'Relative orientation: ',
         data.orientationRelative.x,
@@ -112,7 +112,7 @@ const App: React.FC = () => {
         data.orientationRelative.w,
       );
 
-      // Logging Absolute orientation quaternion values
+      // Logging absolute orientation quaternion values
       console.log(
         'Absolute orientation: ',
         data.orientationAbsolute.x,
