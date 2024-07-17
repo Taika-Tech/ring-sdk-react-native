@@ -30,6 +30,7 @@ import { ConnectedDevices, TaikaConnectionType } from '../ConnectedDevices';
 import { ModeIndex } from '../../Interfaces/Enums';
 import { logMQTT } from '../../Utils/Logging/TaikaLog';
 import { error } from 'console';
+import { Alert } from 'react-native';
 
 
 class MQTTClient {
@@ -110,6 +111,7 @@ class MQTTClient {
     
     public onConnect() {
         logMQTT("TaikaMQTT: Connected to MQTT broker");
+        Alert.alert("MQTT: connected to broker.");
 
         if (this.testConnectionCallback) {
             this.testConnectionCallback({ success: true, message: "Connected successfully to MQTT broker." });
@@ -189,6 +191,7 @@ class MQTTClient {
                 userFriendlyMessage = `Connection failed: ${responseObject.errorMessage}`;
                 break;
         }
+        Alert.alert(`MQTT: Failed to connect: ${responseObject.errorCode}, error: ${responseObject.errorMessage}`, responseObject.invocationContext);
         logMQTT(`Failed to connect: ${responseObject.errorCode}, error: ${responseObject.errorMessage}`, responseObject.invocationContext);
         if (this.testConnectionCallback) {
             this.testConnectionCallback({ success: false, message: userFriendlyMessage });
