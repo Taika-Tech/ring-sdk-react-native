@@ -78,7 +78,10 @@ class MQTTClient {
     }
     
     public isConnected() {
-        return this.client?.isConnected();
+        if (this.client) {
+            return this.client.isConnected();
+        }
+        return false;
     }
 
     private connect() {
