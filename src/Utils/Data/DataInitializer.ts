@@ -113,6 +113,8 @@ class DataInitializer {
             } else {
                 for (const mode of defaultModes) {
                     allModes[mode.uniqueID] = mode;
+                    const { modeMappings, ...modeData } = mode; // Extract only relevant mode data
+                    await this.controllers["allModes"].saveData(modeData, "uniqueID = ?", [mode.uniqueID]);
                 }
             }
 
@@ -132,6 +134,7 @@ class DataInitializer {
                         if (mapping != undefined) {
                             mapping.modeID = mode.uniqueID;
                             ioMappings.push(mapping);
+                            await this.controllers["IOMappings"].saveData(mapping, "modeID = ? AND gesture = ?", [mapping.modeID, mapping.gesture]);
                         }
                     }
                 }
