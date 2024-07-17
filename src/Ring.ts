@@ -389,7 +389,7 @@ class Ring {
     /**
      * Returns wether the mqtt is connected
      */
-    public isMQTTConnected(): Boolean {
+    public isMQTTConnected(): boolean {
         if (this.MQTTClient) {
             return this.MQTTClient.isConnected();
         }

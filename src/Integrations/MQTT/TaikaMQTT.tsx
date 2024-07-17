@@ -77,7 +77,7 @@ class MQTTClient {
         return this.instance;
     }
     
-    public isConnected() {
+    public isConnected(): boolean {
         if (this.client) {
             return this.client.isConnected();
         }
