@@ -275,6 +275,10 @@ class MQTTClient {
         }
     }
 
+    public isConnected() {
+        return this.client?.isConnected();
+    }
+
     public updateConfig(newMqttConfig: MQTTConfiguration) {
         //if (this.brokerUrl !== brokerUrl || this.port !== port || this.clientId !== clientId || this.username !== username || this.password !== password) {
         logMQTT("TaikaMQTT: Updated config");
