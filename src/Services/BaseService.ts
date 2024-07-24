@@ -79,9 +79,7 @@ class BaseService {
     if (this.bleManager === undefined) {
       logBLE("Invalid blemanager at write.");
       return false;
-    }
-    
-    
+    }    
     try {
       await this.bleManager.write(toCharacteristic, data, this.uuid);
       return true;

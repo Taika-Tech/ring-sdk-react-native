@@ -60,6 +60,7 @@ class Ring {
 
     // BLE & Services
     private bleManager: TaikaBleManager | undefined;
+    private MQTTClient: MQTTClient | undefined;
     public devInfoService: DeviceInformationService = new DeviceInformationService();
     public controlService: ControlService = new ControlService();
     public batteryService: BatteryService = new BatteryService();
@@ -128,7 +129,7 @@ class Ring {
         this.bleManager = TaikaBleManager.createInstance();
         await this.bleManager.initialize(this, connectedDevices, this.controlService, this.devInfoService, this.modeService, manager);
         logRing("BLE init through");
-        MQTTClient.createInstance(this.mqttConfig);
+        this.MQTTClient = MQTTClient.createInstance(this.mqttConfig);
 
         this.devInfoService.setBleManager(this.bleManager);
         this.controlService.setBleManager(this.bleManager);
@@ -231,6 +232,7 @@ class Ring {
      */
     public async setMQTTConfig(config: MQTTConfiguration) {
         this.mqttConfig = config;
+        this.MQTTClient?.updateConfig(config);
         await this.controllers["mqttConfiguration"].saveData(config, "brokerIP = ? AND port = ?", [config.brokerIP, config.port]);
     }
 
@@ -383,6 +385,17 @@ class Ring {
         this.controlService.factoryResetAndShipApplication();
         this.setRingBleInfo(DefaultConfigs.defaultBleConfig as RingBleConfig);
     }
+
+    /**
+     * Returns wether the mqtt is connected
+     */
+    public isMQTTConnected(): boolean {
+        if (this.MQTTClient) {
+            return this.MQTTClient.isConnected();
+        }
+        return false;
+    }
+
 
     /**
      * Sends an MQTT packet.

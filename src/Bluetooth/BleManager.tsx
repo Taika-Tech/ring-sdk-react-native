@@ -168,7 +168,7 @@ class TaikaBleManager {
       logBLE("Ring not connected.");
       return;
     }
-    if (!this.ringReadyForReadWrite) {
+    if (!this.ringConnected() && !this.ringReadyForReadWrite) {
       logBLE("Cannot read or write before characteristic discovery is complete.");
       return;
     }
@@ -196,7 +196,7 @@ class TaikaBleManager {
         logBLE("Ring not connected.");
         return;
       }
-      if (!this.ringReadyForReadWrite) {
+      if (!this.ringConnected() && !this.ringReadyForReadWrite) {
         logBLE("Cannot read or write before characteristic discovery is complete.");
         return;
       }
@@ -229,7 +229,7 @@ class TaikaBleManager {
       logBLE("No device connected.");
       return null;
     }
-    if (!this.ringReadyForReadWrite) {
+    if (!this.ringConnected() && !this.ringReadyForReadWrite) {
       logBLE("Cannot read before characteristic discovery is completed.");
       return null;
     }
