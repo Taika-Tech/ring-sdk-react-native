@@ -320,8 +320,8 @@ class ConnectionHandler {
         logBLE("Device is now bonded. Proceeding with setup.");
         return;
       }
-      logBLE("Waiting for user to accept bonding...");
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before checking again
+      //logBLE("Waiting for user to accept bonding...");
+      //await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before checking again
     }
     
     throw new Error("Bonding timeout: User did not complete the bonding process in time.");
