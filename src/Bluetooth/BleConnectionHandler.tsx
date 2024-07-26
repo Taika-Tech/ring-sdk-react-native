@@ -187,6 +187,10 @@ class ConnectionHandler {
   private async setupCharacteristicsAndServices() {
     if (!this.TaikaRing) return;
 
+
+    // Wait for the device to be bonded
+    await this.waitForBonding();
+
     try {
       const services = await this.TaikaRing.services();
       for (const service of services) {
@@ -200,6 +204,7 @@ class ConnectionHandler {
         }
       }
       logBLE("All notifications set up, ringReadyCB.");
+
       await this.ringReadyCB(); // Call ringReadyCB only after all promises resolve
       logBLE("ringReadyCB.");
     } catch (error) {
@@ -304,6 +309,56 @@ class ConnectionHandler {
       }
     }
     return -1;
+  }
+
+  private async waitForBonding(timeout: number = 30000): Promise<void> {
+    const startTime = Date.now();
+    
+    while (Date.now() - startTime < timeout) {
+      const isBonded = await this.checkIfBonded();
+      if (isBonded) {
+        logBLE("Device is now bonded. Proceeding with setup.");
+        return;
+      }
+      logBLE("Waiting for user to accept bonding...");
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before checking again
+    }
+    
+    throw new Error("Bonding timeout: User did not complete the bonding process in time.");
+  }
+
+  public async checkIfBonded(): Promise<boolean> {
+
+    // This characteristic can only be read by bonded devices
+    const HID_SERVICE_UUID = '1812';
+    const REPORT_MAP_CHARACTERISTIC_UUID = '2A4B';
+    
+    if (!this.TaikaRing) {
+      logBLE('No device connected, cannot check bond status');
+      return false;
+    }
+
+    try {
+      const isConnected = await this.TaikaRing.isConnected();
+      if (!isConnected) {
+        logBLE('Device is not connected, cannot check bond status');
+        return false;
+      }
+
+      // Try to read the Report Map characteristic
+      const characteristic = await this.TaikaRing.readCharacteristicForService(
+        HID_SERVICE_UUID,
+        REPORT_MAP_CHARACTERISTIC_UUID
+      );
+
+      // If we can read the characteristic, the device is bonded
+      logBLE('Successfully read Report Map characteristic, device is bonded');
+      return true;
+    } catch (error) {
+      // If we get an error, the device is likely not bonded
+      logBLE('Error reading Report Map characteristic, device is probably not bonded:', error);
+      return false;
+    }
   }
 
 }
