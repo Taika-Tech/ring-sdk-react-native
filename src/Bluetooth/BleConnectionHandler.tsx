@@ -187,9 +187,9 @@ class ConnectionHandler {
   private async setupCharacteristicsAndServices() {
     if (!this.TaikaRing) return;
 
-
+    // TODO: THIS CHECK NEEDS TO BE DONE ASAP
     // Wait for the device to be bonded
-    await this.waitForBonding();
+    //await this.waitForBonding();
 
     try {
       const services = await this.TaikaRing.services();
@@ -311,6 +311,8 @@ class ConnectionHandler {
     return -1;
   }
 
+  // TODO: implement this logic below to check if ring is bonded before setting up the connection
+  /*
   private async waitForBonding(timeout: number = 30000): Promise<void> {
     const startTime = Date.now();
     
@@ -359,8 +361,7 @@ class ConnectionHandler {
       logBLE('Error reading Report Map characteristic, device is probably not bonded:', error);
       return false;
     }
-  }
-
+  }*/
 }
 
 export default ConnectionHandler;
