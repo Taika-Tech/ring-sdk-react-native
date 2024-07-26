@@ -25,6 +25,7 @@ import { MouseConfig } from '../Interfaces/Interfaces';
 import { ConnectedDevices } from '../Integrations/ConnectedDevices';
 import { logBLE } from '../Utils/Logging/TaikaLog';
 import BaseService from './BaseService';
+import { Buffer } from 'buffer';
 
 const controlServiceUUID: string = "dc374d70-77bc-4f4e-8c7e-047f09f8e883";
 export const controlToServerCharacteristicUUID: string = "a6d93476-f864-44f7-8197-a2cc089ffa7b";

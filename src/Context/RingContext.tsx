@@ -229,7 +229,7 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
             modeMappings: newMappings
         };
         handleSetMode(newMode);
-        setCurrentlyModifiedMode(allModes[newMode.uniqueID]);
+        setCurrentlyModifiedMode(newMode);
     };
 
     const clearMappingsOfCurrentMode = async () => {
@@ -246,7 +246,7 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
             modeMappings: blankMapping
         };
         handleSetMode(newMode);
-        setCurrentlyModifiedMode(allModes[newMode.uniqueID]);
+        setCurrentlyModifiedMode(newMode);
     };
 
     return (
