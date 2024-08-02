@@ -20,7 +20,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 // External imports
-import React, { ReactNode, createContext, useEffect, useState } from 'react';
+import type * as ReactType from 'react';
 // SDK imports
 import Ring from '../Ring';
 import { AppConfig, RingContextType, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig } from '../Interfaces/Interfaces';
@@ -31,88 +31,89 @@ import { blankMapping } from '../Ring/Mappings/IOMappings';
 import { logRing } from '../Utils/Logging/TaikaLog';
 
 interface Props {
-    children: ReactNode;
+    children: ReactType.ReactNode;
 }
 
-// Initialize context with default non-null values
-export const RingContext = createContext<RingContextType>({
-    appConfig: null,
-    setAppConfig: async (config: AppConfig) => { },
+// Create a function that returns the context and provider
+export const createRingContext = (React: typeof ReactType) => {
+    // Initialize context with default non-null values
+    const RingContext = React.createContext<RingContextType>({
+        appConfig: null,
+        setAppConfig: async (config: AppConfig) => { },
 
-    mouseConfig: defaultMouseConfig as MouseConfig, // Default values to ensure non-null
-    setMouseConfig: async (config: MouseConfig) => { },
+        mouseConfig: defaultMouseConfig as MouseConfig,
+        setMouseConfig: async (config: MouseConfig) => { },
 
-    handedness: defaultHandedness.userHandedness,
-    setHandedness: async (config: Handedness) => { },
+        handedness: defaultHandedness.userHandedness,
+        setHandedness: async (config: Handedness) => { },
 
-    mqttConfig: defaultMQTTConfig as MQTTConfiguration,
-    setMQTTConfig: async (config: MQTTConfiguration) => { },
+        mqttConfig: defaultMQTTConfig as MQTTConfiguration,
+        setMQTTConfig: async (config: MQTTConfiguration) => { },
 
-    currentRingModes: defaultRingModes as RingModes,
-    setCurrentRingModes: async (modes: RingModes) => { },
+        currentRingModes: defaultRingModes as RingModes,
+        setCurrentRingModes: async (modes: RingModes) => { },
 
-    currentlyModifiedMode: null,
-    setCurrentlyModifiedMode: async (mode: ModeIndex) => { },
-    
-    allModes: {},
-    setMode: async (mode: RingMode) => { },                     // Set a single mode
-    setAllModes: async (modes: RingMode[]) => { },              // Set all modes
-    
-    ioMappings: [],
-    setIOMapping: async (newMapping: IOMapping) => { },         // Set a single IO mapping
-    setAllIOMappings: async (newMappings: IOMapping[]) => { },  // Set all IO mappings
-    resetMappingsOfCurrentMode: async () => { },
-    clearMappingsOfCurrentMode: async () => { }, 
+        currentlyModifiedMode: null,
+        setCurrentlyModifiedMode: async (mode: ModeIndex) => { },
+        
+        allModes: {},
+        setMode: async (mode: RingMode) => { },
+        setAllModes: async (modes: RingMode[]) => { },
+        
+        ioMappings: [],
+        setIOMapping: async (newMapping: IOMapping) => { },
+        setAllIOMappings: async (newMappings: IOMapping[]) => { },
+        resetMappingsOfCurrentMode: async () => { },
+        clearMappingsOfCurrentMode: async () => { }, 
 
-    ringBleInfo: defaultBleConfig as RingBleConfig,
-    setRingBleInfo: async (bleInfo: RingBleConfig) => { },
-});
+        ringBleInfo: defaultBleConfig as RingBleConfig,
+        setRingBleInfo: async (bleInfo: RingBleConfig) => { },
+    });
 
-// Provider Component
-export const RingProvider: React.FC<Props> = ({ children }) => {
-    const ring = Ring.getInstance();
+    // Provider Component
+    const RingProvider: React.FC<Props> = ({ children }) => {
+        console.log('RingProvider initialized');
 
-    const [appConfig, setAppConfig] = useState<AppConfig | null>(null);
-    const [mouseConfig, setMouseConfig] = useState<MouseConfig>(ring.mouseConfig || defaultMouseConfig as MouseConfig);
-    const [handedness, setHandedness] = useState<Handedness>(ring.handedness || defaultHandedness.userHandedness);
-    const [mqttConfig, setMQTTConfig] = useState<MQTTConfiguration>(ring.mqttConfig);
-    const [currentRingModes, setCurrentRingModes] = useState<RingModes>(ring.ringModes);
-    const [currentlyModifiedMode, setCurrentlyModifiedMode] = useState<RingMode | null>(null);
-    const [allModes, setAllModes] = useState<{ [uniqueID: number]: RingMode }>(ring.allModes);
-    const [ioMappings, setAllIOMappings] = useState<IOMapping[]>(ring.ioMappings);
-    const [ringBleInfo, setRingBleInfo] = useState<RingBleConfig>(ring.bleInfo || defaultBleConfig as RingBleConfig);
+        const ring = Ring.getInstance();
 
-    useEffect(() => {
-        ring.subscribe(() => {
-            // Update provider state when Ring notifies of a state change
-            setAppConfig(ring.appConfig);
-            setMouseConfig(ring.mouseConfig);
-            setHandedness(ring.handedness);
-            setMQTTConfig(ring.mqttConfig);
-            setCurrentRingModes(ring.ringModes);
-            setAllModes({ ...ring.allModes });
-            setAllIOMappings(ring.ioMappings);
-            setRingBleInfo(ring.bleInfo);
+        const [appConfig, setAppConfig] = React.useState<AppConfig | null>(null);
+        const [mouseConfig, setMouseConfig] = React.useState<MouseConfig>(ring.mouseConfig || defaultMouseConfig as MouseConfig);
+        const [handedness, setHandedness] = React.useState<Handedness>(ring.handedness || defaultHandedness.userHandedness);
+        const [mqttConfig, setMQTTConfig] = React.useState<MQTTConfiguration>(ring.mqttConfig);
+        const [currentRingModes, setCurrentRingModes] = React.useState<RingModes>(ring.ringModes);
+        const [currentlyModifiedMode, setCurrentlyModifiedMode] = React.useState<RingMode | null>(null);
+        const [allModes, setAllModes] = React.useState<{ [uniqueID: number]: RingMode }>(ring.allModes);
+        const [ioMappings, setAllIOMappings] = React.useState<IOMapping[]>(ring.ioMappings);
+        const [ringBleInfo, setRingBleInfo] = React.useState<RingBleConfig>(ring.bleInfo || defaultBleConfig as RingBleConfig);
 
-            // Set a default mode for modifications
-            // TODO: this seems to be null everytime. Figure out why and create a better solution
-            if (currentlyModifiedMode === null) {
-                // Fetch default mode that the app will modify
-                logRing("CurrentlyModifiedMode is null");
-                logRing("Current modes: ", currentRingModes);
-                const initialModeId = currentRingModes.ringModeOne; // Default initial mode
-                if (allModes[initialModeId]) {
-                    setCurrentlyModifiedMode(allModes[initialModeId]);
-                } else {
-                    console.error("Couldn't initialize currentlyModifiedMode with uniqueID: ", initialModeId);
+        React.useEffect(() => {
+            ring.subscribe(() => {
+                // Update provider state when Ring notifies of a state change
+                setAppConfig(ring.appConfig);
+                setMouseConfig(ring.mouseConfig);
+                setHandedness(ring.handedness);
+                setMQTTConfig(ring.mqttConfig);
+                setCurrentRingModes(ring.ringModes);
+                setAllModes({ ...ring.allModes });
+                setAllIOMappings(ring.ioMappings);
+                setRingBleInfo(ring.bleInfo);
+
+                if (currentlyModifiedMode === null) {
+                    logRing("CurrentlyModifiedMode is null");
+                    logRing("Current modes: ", currentRingModes);
+                    const initialModeId = currentRingModes.ringModeOne;
+                    if (allModes[initialModeId]) {
+                        setCurrentlyModifiedMode(allModes[initialModeId]);
+                    } else {
+                        console.error("Couldn't initialize currentlyModifiedMode with uniqueID: ", initialModeId);
+                    }
                 }
-            }
-        });
+            });
 
-        return () => {
-            // Implement cleanup if needed
-        };
-    }, []);
+            return () => {
+                // Implement cleanup if needed
+            };
+        }, []);
 
     const handleSetAppConfig = async (updatedProperty: Partial<AppConfig>) => {
         const newConfig = { ...appConfig, ...updatedProperty };
@@ -253,36 +254,31 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
         <RingContext.Provider value={{
             appConfig,
             setAppConfig: handleSetAppConfig, 
-
             mouseConfig, 
             setMouseConfig: handleSetMouseConfig, 
-
             handedness, 
             setHandedness: handleSetHandedness, 
-
             mqttConfig,
             setMQTTConfig: handleSetMQTTConfig,
-
             currentRingModes,
             setCurrentRingModes: handleSetRingModes,
-
             currentlyModifiedMode,
             setCurrentlyModifiedMode: handleSetCurrentlyModifiedMode,
-
             allModes,
             setMode: handleSetMode,
             setAllModes: handleSetAllModes,
-
             ioMappings, 
-            setIOMapping: handleSetIOMapping,   // For updating single mapping
-            setAllIOMappings: handleSetAllIOMappings, // For updating all mappings
+            setIOMapping: handleSetIOMapping,
+            setAllIOMappings: handleSetAllIOMappings,
             clearMappingsOfCurrentMode,
             resetMappingsOfCurrentMode,
-            
             ringBleInfo,
             setRingBleInfo: handleSetRingBleInfo,
         }}>
             {children}
         </RingContext.Provider>
     );
+};
+
+return { RingContext, RingProvider };
 };

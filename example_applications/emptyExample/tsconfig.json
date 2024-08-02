@@ -10,6 +10,10 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "ring-sdk-react-native": ["../.."]
+    },
   },
   "include": ["./App.tsx"],
   "exclude": ["node_modules"]

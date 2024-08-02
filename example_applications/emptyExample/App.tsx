@@ -33,12 +33,15 @@ import {
   ringEventHandler,
   MotionData,
   TouchData,
+  createRingContext,
 } from 'ring-sdk-react-native';
 import styling from './src/styling.ts';
 import {throttle} from 'lodash';
 
 // Create a Bluetooth manager
 const manager = new BleManager();
+const { RingContext, RingProvider } = createRingContext(React);
+
 
 const App: React.FC = () => {
   const [sendData, setSendData] = useState<boolean>(false);
@@ -51,6 +54,8 @@ const App: React.FC = () => {
   const [trail, setTrail] = useState<{x: string; y: string}[]>([]);
 
   useEffect(() => {
+    console.log('shit.');
+
     const setupSDK = async () => {
       // Initialize the ring by passing the Bluetooth manager
       const ringInstance = await initializeRing(manager);
@@ -143,6 +148,7 @@ const App: React.FC = () => {
   };
 
   return (
+    <RingProvider>
     <SafeAreaView style={styling.container}>
       <View>
         <Text style={styling.h1}>Ring Data</Text>
@@ -259,6 +265,7 @@ const App: React.FC = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </RingProvider>
   );
 };
 
