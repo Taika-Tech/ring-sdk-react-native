@@ -43,10 +43,9 @@ import {
     tableConfigurations
 } from '../../Config/TableConfigurations';
 import { Gestures, TaikaModeType } from '../../Interfaces/Enums';
-import defaultModes from '../../Ring/Ring-Mode/RingModes';
+import defaultModes from '../../Config/RingModesConfig';
 import { IOMappings } from '../../Interfaces/Interfaces';
-import { musicMapping, mouseMapping, MQTTMapping, influencerMapping, presentationMapping, blankMapping } from '../../Ring/Mappings/IOMappings';
-import { logApp } from '../Logging/TaikaLog';
+import { musicMapping, mouseMapping, MQTTMapping, influencerMapping, presentationMapping, blankMapping } from '../../Config/RingIOMappingsConfig';
 
 class DataInitializer {
     private controllers: { [key: string]: GenericDataController } = {};

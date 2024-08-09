@@ -25,7 +25,7 @@ import { Platform } from 'react-native';
 import { logBLE } from '../Utils/Logging/TaikaLog';
 import NotificationHandler from './BleNotificationHandler';
 import requestBluetoothPermission from './BlePermissions';
-import Ring from '../Ring';
+import Ring from '../Ring/Ring';
 import { defaultBleConfig } from '../Config/TableConfigurations';
 import { ringEventHandler } from '../Ring/RingEvents';
 import { dataServiceUUID } from '../Services/DataService';
@@ -203,10 +203,10 @@ class ConnectionHandler {
           }
         }
       }
-      logBLE("All notifications set up, ringReadyCB.");
+      logBLE("All notifications set up, ringReadyCallback.");
 
-      await this.ringReadyCB(); // Call ringReadyCB only after all promises resolve
-      logBLE("ringReadyCB.");
+      await this.ringReadyCallback(); // Call ringReadyCallback only after all promises resolve
+      logBLE("ringReadyCallback called.");
     } catch (error) {
       console.error(`Error setting up characteristics and services: ${error}`);
     }
@@ -250,8 +250,7 @@ class ConnectionHandler {
     }
   }
 
-  // TODO: We need to add capability to add ringReady callback functions
-  private async ringReadyCB() {
+  private async ringReadyCallback() {
     // Save ring info to persistent storage
     if (this.TaikaRing && this.ring && this.ring.bleInfo) {
       await this.ring.setRingBleInfo({

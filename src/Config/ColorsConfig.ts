@@ -19,20 +19,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import { Color } from '../../Interfaces/Enums';
-
-const ColorDescriptions: { [key in Color]: string } = {
-    [Color.Red]: "Red",
-    [Color.Green]: "Green",
-    [Color.Blue]: "Blue",
-    [Color.Purple]: "Purple",
-    [Color.Teal]: "Teal",
-    [Color.Yellow]: "Yellow",
-    [Color.Indigo]: "Indigo",
-    [Color.Orange]: "Orange",
-    [Color.Pink]: "Pink",
-    //[Color.White]: "White",   white is a reserved color, not available as mode color
-};
+import { Color } from '../Interfaces/Enums';
 
 const ColorStyling: { [index: number]: string } = {
     [Color.Red]: "#FF453A",
@@ -47,4 +34,4 @@ const ColorStyling: { [index: number]: string } = {
     //[Color.White]: "white",   white is a reserved color, not available as mode color
 };
 
-export { Color, ColorDescriptions, ColorStyling };
+export { Color, ColorStyling };

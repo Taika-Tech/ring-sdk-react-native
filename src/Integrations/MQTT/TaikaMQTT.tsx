@@ -25,11 +25,10 @@ import { Client, Message } from 'paho-mqtt';
 // RingSDK imports
 import { MQTTConfiguration } from '../../Interfaces/Interfaces'
 import MQTTTopics from './TaikaMQTTConfig'
-import { APPLICATION_DEVICE_HANDLE, NO_BONDING } from '../../Ring/Mappings/IOMappings';
+import { APPLICATION_DEVICE_HANDLE } from '../../Config/RingIOMappingsConfig';
 import { ConnectedDevices, TaikaConnectionType } from '../ConnectedDevices';
 import { ModeIndex } from '../../Interfaces/Enums';
 import { logMQTT } from '../../Utils/Logging/TaikaLog';
-import { error } from 'console';
 import { Alert } from 'react-native';
 
 

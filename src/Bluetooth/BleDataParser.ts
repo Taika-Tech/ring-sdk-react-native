@@ -1,4 +1,4 @@
-/* BleDataParser.tsx
+/* BleDataParser.ts
  *  
  * Copyright Taika Tech 2024
  * 
@@ -20,8 +20,10 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
+
+import { gestureOrder } from '../Config/RingIOMappingsConfig';
 import { Gestures, TouchEventMask, ModeIndex} from '../Interfaces/Enums';
-import { ModeActionData, MotionData, TouchData } from '../Interfaces/Interfaces';
+import { ModeActionData, MotionData, TouchData, RingMode } from '../Interfaces/Interfaces';
 
 import { logBLE } from '../Utils/Logging/TaikaLog';
 
@@ -154,6 +156,41 @@ export const parseMotionData = (byteArray: number[]): MotionData | null => {
             w: dataView.getFloat32(83, true),
         },
     };
+}
+
+export function ringModeToNumberArray(mode: RingMode): number[] {
+    const bytes: number[] = [];
+    bytes.push(mode.modeIndex);
+    
+    // Convert TimeoutOptions to 4 bytes
+    bytes.push(...numberToBytes(mode.activeTimeoutS, 4));
+    
+    // The rest of the fields are 1 byte each
+    bytes.push(mode.type, mode.color, mode.modeIndex);
+    
+    gestureOrder.forEach((gesture: Gestures) => {
+        const mapping = mode.modeMappings[gesture];
+        if (mapping) {
+            // Assuming each field exists and is initialized as specified
+            bytes.push(mapping.action, mapping.bonding, mapping.target, mapping.attribute);
+        } else {
+            bytes.push(0, 0, 0, 0); // Push zeros for unmapped gestures
+        }
+    });
+
+    // Mouse targets
+    bytes.push(mode.mouseTarget, mode.activeMouse);
+    
+    return bytes;
+}
+
+// Helper function to ensure numbers fit into the specified byte width
+function numberToBytes(num: number, byteSize: number): number[] {
+    const bytes = [];
+    for (let i = 0; i < byteSize; i++) {
+        bytes.push((num >> (8 * i)) & 0xFF);
+    }
+    return bytes;
 }
 
 

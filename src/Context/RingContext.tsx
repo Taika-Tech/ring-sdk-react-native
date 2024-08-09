@@ -22,12 +22,11 @@
 // External imports
 import React, { ReactNode, createContext, useEffect, useState } from 'react';
 // SDK imports
-import Ring from '../Ring';
-import { AppConfig, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig } from '../Interfaces/Interfaces';
+import Ring from '../Ring/Ring';
+import { AppConfig, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig, RingMode } from '../Interfaces/Interfaces';
 import { defaultMouseConfig, defaultHandedness, defaultMQTTConfig, defaultRingModes, defaultBleConfig } from '../Config/TableConfigurations';
 import { ModeIndex } from '../Interfaces/Enums';
-import { RingMode } from '../Interfaces/Interfaces';
-import { blankMapping } from '../Ring/Mappings/IOMappings';
+import { blankMapping } from '../Config/RingIOMappingsConfig';
 import { logRing } from '../Utils/Logging/TaikaLog';
 
 interface Props {

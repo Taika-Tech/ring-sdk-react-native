@@ -20,7 +20,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { logBLE } from '../Utils/Logging/TaikaLog';
+import { ringEventHandler } from 'ring-sdk-react-native';
 import BaseService from './BaseService';
 
 const batteryServiceUUID: string = "180F";
@@ -42,6 +42,12 @@ class BatteryService extends BaseService {
   
       // First byte represents the state of charge
       const stateOfCharge = characteristicData[0];
+
+      // Trigger lowBattery event if battery under 20%
+      if (stateOfCharge <= 20) {
+        ringEventHandler.trigger('lowBattery');
+      }
+      
       return stateOfCharge;
     } catch (error) {
       console.error('Error reading state of charge:', error);

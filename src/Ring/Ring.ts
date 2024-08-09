@@ -21,8 +21,8 @@
 */
 
 // Imports
-import TaikaBleManager from './Bluetooth/BleManager';
-import GenericDataController from './Utils/Data/GenericDataController';
+import TaikaBleManager from '../Bluetooth/BleManager';
+import GenericDataController from '../Utils/Data/GenericDataController';
 import {
     AppConfig,
     IOMappings,
@@ -33,24 +33,24 @@ import {
     IOMapping,
     RingBleConfig,
     RingVersion
-} from './Interfaces/Interfaces';
-import * as DefaultConfigs from './Config/TableConfigurations';
-import { logRing } from './Utils/Logging/TaikaLog';
-import { Handedness, ModeIndex, TaikaModeType } from './Interfaces/Enums';
+} from '../Interfaces/Interfaces';
+import * as DefaultConfigs from '../Config/TableConfigurations';
+import { logRing } from '../Utils/Logging/TaikaLog';
+import { Handedness, ModeIndex, TaikaModeType } from '../Interfaces/Enums';
 import { debounce } from 'lodash';
-import * as Mappings from './Ring/Mappings/IOMappings';
-import { ConnectedDevices } from './Integrations/ConnectedDevices';
-import MQTTClient from './Integrations/MQTT/TaikaMQTT';
-import ControlService from './Services/ControlService';
-import BatteryService from './Services/BatteryService';
-import ModeService from './Services/ModeService';
-import DataInitializer from './Utils/Data/DataInitializer';
-import DeviceInformationService from './Services/DeviceInformationService';
-import DataService from './Services/DataService';
-import LedService from './Services/LedService';
-import OtaDfuService from './Services/OtaDfuService';
+import * as Mappings from '../Config/RingIOMappingsConfig';
+import { ConnectedDevices } from '../Integrations/ConnectedDevices';
+import MQTTClient from '../Integrations/MQTT/TaikaMQTT';
+import ControlService from '../Services/ControlService';
+import BatteryService from '../Services/BatteryService';
+import ModeService from '../Services/ModeService';
+import DataInitializer from '../Utils/Data/DataInitializer';
+import DeviceInformationService from '../Services/DeviceInformationService';
+import DataService from '../Services/DataService';
+import LedService from '../Services/LedService';
+import OtaDfuService from '../Services/OtaDfuService';
 import { BleManager } from 'react-native-ble-plx';
-import ConfigService from './Services/ConfigService';
+import ConfigService from '../Services/ConfigService';
 
 
 class Ring {
@@ -127,7 +127,7 @@ class Ring {
         // These need to be initialized before setting up services
         const connectedDevices = ConnectedDevices.createInstance(this.controllers);
         this.bleManager = TaikaBleManager.createInstance();
-        await this.bleManager.initialize(this, connectedDevices, this.controlService, this.devInfoService, this.modeService, manager);
+        await this.bleManager.initialize(this, connectedDevices, this.batteryService, this.controlService, this.devInfoService, this.modeService, manager);
         logRing("BLE init through");
         this.MQTTClient = MQTTClient.createInstance(this.mqttConfig);
 

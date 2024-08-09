@@ -23,8 +23,6 @@
 import { ModeActionData, MotionData, TouchData } from '../Interfaces/Interfaces';
 
 type EventCallback = (...args: any[]) => void;
-type Vector3 = [number, number, number];
-
 
 class RingEventHandler {
     private events: { [key: string]: EventCallback[] } = {};
@@ -59,10 +57,6 @@ export function onDisconnected(callback: () => void): void {
 
 export function onLowBattery(callback: () => void): void {
     ringEventHandler.on('lowBattery', callback);
-}
-
-export function onNewData(callback: (data: any) => void): void {
-    ringEventHandler.on('newData', callback);
 }
 
 export function onMotionEvent(callback: (data: MotionData) => void): void {

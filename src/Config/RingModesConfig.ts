@@ -20,12 +20,10 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { Color } from './LEDColorsObject'; // Adjust the import paths as necessary
-import { TaikaModeType } from './ModeTypesObject';
-import { TimeoutOptions } from './RingTimeOutsObject';
-import { MQTTMapping, mouseMapping, presentationMapping, musicMapping, blankMapping, NO_BONDING, APPLICATION_DEVICE_HANDLE, influencerMapping } from '../Mappings/IOMappings';
-import { IOMappings, RingMode } from '../../Interfaces/Interfaces';
-import { ModeIndex } from './ModeIndex';
+import { Color } from './ColorsConfig';
+import { MQTTMapping, mouseMapping, presentationMapping, musicMapping, blankMapping, APPLICATION_DEVICE_HANDLE, influencerMapping } from './RingIOMappingsConfig';
+import { IOMappings, RingMode } from '../Interfaces/Interfaces';
+import { ModeIndex, TaikaModeType, TimeoutOptions } from '../Interfaces/Enums';
 
 // Define the RingModes object with an explicit index signature
 const defaultModes: RingMode[] = [
@@ -112,7 +110,7 @@ const defaultModes: RingMode[] = [
         mouseTarget: APPLICATION_DEVICE_HANDLE,
         activeMouse: 0,
         uniqueID: 6,
-    },/*
+    },
     {
         name: "Custom",
         activeTimeoutS: TimeoutOptions.Timeout_1min,
@@ -124,7 +122,7 @@ const defaultModes: RingMode[] = [
         mouseTarget: APPLICATION_DEVICE_HANDLE,
         activeMouse: 0,
         uniqueID: 7,
-    },*/
+    },
 ];
 
 // Function to get default mappings by mode type
@@ -144,8 +142,8 @@ export function getDefaultMappingsByType(type: TaikaModeType): IOMappings {
             return { ...blankMapping }; // Using blankMapping for Sport and Influencer as an example*/
         case TaikaModeType.Music:
             return { ...musicMapping };
-        /*case TaikaModeType.Custom:
-            return { ...blankMapping }; // Default for custom types*/
+        case TaikaModeType.Custom:
+            return { ...blankMapping }; // Default for custom types
         default:
             return { ...blankMapping }; // Safe default
     }

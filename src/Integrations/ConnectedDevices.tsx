@@ -20,7 +20,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { APPLICATION_DEVICE_HANDLE, NO_BONDING } from '../Ring/Mappings/IOMappings';
+import { APPLICATION_DEVICE_HANDLE, NO_BONDING } from '../Config/RingIOMappingsConfig';
 import { TaikaConnectionType } from '../Interfaces/Enums';
 import { ConnectedDevice } from '../Interfaces/Interfaces';
 import { logConnectedDevices, logRing } from '../Utils/Logging/TaikaLog';

@@ -21,8 +21,7 @@
 */
 
 import { BleManager } from 'react-native-ble-plx';
-import Ring from './src/Ring';
-import { logRing } from './src/Utils/Logging/TaikaLog';
+import Ring from './src/Ring/Ring';
 
 export const initializeRing = async (manager: BleManager) => {
   // Initialize Ring instance
@@ -34,9 +33,9 @@ export const initializeRing = async (manager: BleManager) => {
 
 
 // Ring
-export { default as Ring } from './src/Ring'; // Default and named export
-
-//export * from './src/Ring';
+export { default as Ring } from './src/Ring/Ring'; // Default and named export
+export * from './src/Ring/RingConfig';
+export * from './src/Ring/RingEvents';
 
 // Bluetooth
 export * from './src/Bluetooth/BleConnectionHandler';
@@ -45,7 +44,10 @@ export * from './src/Bluetooth/BleNotificationHandler';
 export * from './src/Bluetooth/BlePermissions';
 
 // Config
+export * from './src/Config/ColorsConfig';
 export * from './src/Config/LogConfig';
+export * from './src/Config/RingIOMappingsConfig';
+export * from './src/Config/RingModesConfig';
 export * from './src/Config/TableConfigurations';
 
 // Context
@@ -61,17 +63,6 @@ export * from './src/Integrations/Platform';
 export * from './src/Interfaces/Descriptions';
 export * from './src/Interfaces/Enums';
 export * from './src/Interfaces/Interfaces';
-
-// Ring
-export * from './src/Ring/Mappings/IOMappings';
-export * from './src/Ring/Ring-Mode/LEDColorsObject';
-export * from './src/Ring/Ring-Mode/ModeIndex';
-export * from './src/Ring/Ring-Mode/ModeTypesObject';
-export * from './src/Ring/Ring-Mode/RingMode';
-export * from './src/Ring/Ring-Mode/RingModes';
-export * from './src/Ring/Ring-Mode/RingTimeOutsObject';
-export * from './src/Ring/RingConfig';
-export * from './src/Ring/RingEvents';
 
 // Services
 export * from './src/Services/BaseService';

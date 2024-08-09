@@ -19,7 +19,7 @@
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-import { MappingActions, Gestures } from './Enums';
+import { MappingActions, Gestures, Color, ModeIndex, TaikaModeType, TimeoutOptions } from './Enums';
 
 // This file has been left in progress since it was a low priority.
 
@@ -42,13 +42,23 @@ export const ActionDescriptions: { [key in MappingActions]: string } = {
     [MappingActions.swipeLeft]: "Swipe Left",
     [MappingActions.swipeRight]: "Swipe Right",
     [MappingActions.HidAndTaikaDivider]: "HidAndTaikaDivider",
-    [MappingActions.TurnLightsOn]: "Turn Lights On",
-    [MappingActions.TurnLightsOff]: "Turn Lights Off",
-    [MappingActions.ToggleLights]: "Toggle Lights",
     [MappingActions.MQTT]: "MQTT",
     [MappingActions.TaikaAndPressAndHoldDivider]: "TaikaAndPressAndHoldDivider",
     [MappingActions.DragAndDrop]: "Drag And Drop",
     [MappingActions.Cursor]: "Cursor"
+};
+
+export const ColorDescriptions: { [key in Color]: string } = {
+    [Color.Red]: "Red",
+    [Color.Green]: "Green",
+    [Color.Blue]: "Blue",
+    [Color.Purple]: "Purple",
+    [Color.Teal]: "Teal",
+    [Color.Yellow]: "Yellow",
+    [Color.Indigo]: "Indigo",
+    [Color.Orange]: "Orange",
+    [Color.Pink]: "Pink",
+    //[Color.White]: "White",   white is a reserved color, not available as mode color
 };
 
 export const GestureDescriptions: { [key in Gestures]: string } = {
@@ -62,14 +72,46 @@ export const GestureDescriptions: { [key in Gestures]: string } = {
     [Gestures.pressAndHold]: "Press & Hold"
 };
 
-// This is needed below to make sure gestures are in the correct order
-export const gestureOrder: Gestures[] = [
-    Gestures.singleTap,
-    Gestures.doubleTap,
-    Gestures.tripleTap,
-    Gestures.swipeUp,
-    Gestures.swipeDown,
-    Gestures.swipeLeft,
-    Gestures.swipeRight,
-    Gestures.pressAndHold
-];
+export const ModeIndexDescriptions: { [key in ModeIndex]: string } = {
+    [ModeIndex.modeOne]: "Single tap mode",
+    [ModeIndex.modeTwo]: "Double tap mode",
+    [ModeIndex.modeThree]: "Triple tap mode",
+    //[ModeTapIndex.currentMode]: "Current mode",
+    //[ModeTapIndex.bigError]: "Error in tap mode",
+};
+
+export const ModeTypeDescriptions: { [key in TaikaModeType]: string } = {
+    [TaikaModeType.MQTTControl]: "Home Assistant",
+    [TaikaModeType.ComputerMouse]: "Computer Mouse",
+    //[TaikaModeType.TvControl]: "TV Control",
+    [TaikaModeType.PresentationTool]: "Presentation Tool",
+    //[TaikaModeType.Sport]: "Sport",
+    [TaikaModeType.Influencer]: "Influencer",
+    [TaikaModeType.Music]: "Music",
+    [TaikaModeType.Custom]: "Custom"
+};
+
+export const ModeTypeDescriptionsExtended: { [key in TaikaModeType]: string } = {
+    [TaikaModeType.MQTTControl]: "In MQTT mode, the app will relay the gestures to your smart home platform over MQTT. Specify your broker from the MQTT menu in settings tab of this app.",
+    [TaikaModeType.ComputerMouse]: "In mouse mode, you can move the cursor by moving your finger in the air. You can view and modify clicking gestures from functions below.",
+    //[TaikaModeType.TvControl]: "TV Control",
+    [TaikaModeType.PresentationTool]: "Swipe to switch slides with Presentation Tool. You can point on the screen by pressing and holding the ring's touchpad.",
+    //[TaikaModeType.Sport]: "Sport",
+    [TaikaModeType.Influencer]: "Flick through social media reels.",
+    [TaikaModeType.Music]: "In music mode, you can tap to play/pause and swipe to switch the song. You can customize functionality from functions below.",
+    [TaikaModeType.Custom]: "Use custom mode for making your own mode."
+};
+
+export const TimeoutOptionsDescriptions: { [key in TimeoutOptions]: string } = {
+    [TimeoutOptions.Timeout_1s]: "1 sec",
+    [TimeoutOptions.Timeout_5s]: "5 sec",
+    [TimeoutOptions.Timeout_10s]: "10 sec",
+    [TimeoutOptions.Timeout_15s]: "15 sec",
+    [TimeoutOptions.Timeout_20s]: "20 sec",
+    [TimeoutOptions.Timeout_25s]: "25 sec",
+    [TimeoutOptions.Timeout_30s]: "30 sec",
+    [TimeoutOptions.Timeout_1min]: "1 min",
+    [TimeoutOptions.Timeout_2min]: "2 min",
+    [TimeoutOptions.Timeout_5min]: "5 min",
+    [TimeoutOptions.Timeout_1h]: "1 h",
+};

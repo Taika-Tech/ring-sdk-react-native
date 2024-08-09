@@ -134,9 +134,6 @@ export enum MappingActions {
 
     HidAndTaikaDivider =        0x7F,
     // Taika API commands
-    TurnLightsOn =              0x80, //not in use
-    TurnLightsOff =             0x81, //not in use
-    ToggleLights =              0x82, //not in use
     MQTT =                      0x83,
     TaikaAndPressAndHoldDivider = 0xAF,
     // Brightness =             0xB0, // Uncomment if needed later
@@ -194,7 +191,7 @@ export enum TaikaModeType {
     //Sport =           0x04,
     Influencer =        0x05,
     Music =             0x06,
-    //Custom =          0x07,
+    Custom =            0x07,
 }
 
 export enum TimeoutOptions {

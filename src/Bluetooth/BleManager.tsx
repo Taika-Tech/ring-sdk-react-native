@@ -25,7 +25,7 @@ import { Buffer } from 'buffer';
 // Ble related imports
 import NotificationHandler from './BleNotificationHandler';
 import { logBLE } from '../Utils/Logging/TaikaLog';
-import Ring from '../Ring.js'; // NEW RING
+import Ring from '../Ring/Ring.js'; // NEW RING
 import { defaultBleConfig } from '../Config/TableConfigurations';
 import { RingVersion } from '../Interfaces/Interfaces';
 import ConnectionHandler from './BleConnectionHandler';
@@ -35,6 +35,7 @@ import BleLogs from '../Utils/Logging/BleLogs';
 import { ConnectedDevices } from '../Integrations/ConnectedDevices';
 import { BleManager } from 'react-native-ble-plx';
 import ModeService from '../Services/ModeService';
+import BatteryService from '../Services/BatteryService';
 
 type Callback = () => void;
 
@@ -46,6 +47,7 @@ class TaikaBleManager {
   private connectionHandler: ConnectionHandler | undefined;
   private ring: Ring | undefined;
   private connectingCompletedCallbacks: Callback[] = [];
+  private batteryService: BatteryService | undefined;
   private controlService: ControlService | undefined;
   private deviceInfoService: DeviceInformationService | undefined;
   private modeService: ModeService | undefined;
@@ -68,11 +70,20 @@ class TaikaBleManager {
     return TaikaBleManager.instance;
   }
   
-  public async initialize(ring: Ring, connectedDevices: ConnectedDevices, controlService: ControlService, deviceInformationService: DeviceInformationService, modeService: ModeService, manager: BleManager) {
+  public async initialize(
+    ring: Ring, 
+    connectedDevices: ConnectedDevices, 
+    batteryService: BatteryService,
+    controlService: ControlService, 
+    deviceInformationService: DeviceInformationService, 
+    modeService: ModeService, 
+    manager: BleManager) {
+
     this.ring = ring;
     
     this.notificationHandler = new NotificationHandler(connectedDevices);
     this.connectionHandler = new ConnectionHandler(this.notificationHandler, manager);
+    this.batteryService = batteryService;
     this.controlService = controlService;
     this.deviceInfoService = deviceInformationService;
     this.modeService = modeService;
@@ -98,6 +109,7 @@ class TaikaBleManager {
     }
     this.ringReadyForReadWrite = true;
     this.RingVersion = await this.deviceInfoService.readFirmwareVersion();
+    await this.batteryService?.readBatteryLevel();
     this.modeService.claimPrimary();
     this.notifyConnectingCompletedCallbacks();
   }

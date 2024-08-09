@@ -22,7 +22,7 @@
 
 // Ring
 import { ringEventHandler } from '../Ring/RingEvents';
-import { APPLICATION_DEVICE_HANDLE } from '../Ring/Mappings/IOMappings';
+import { APPLICATION_DEVICE_HANDLE } from '../Config/RingIOMappingsConfig';
 // Integrations
 import { ConnectedDevices, TaikaConnectionType } from '../Integrations/ConnectedDevices';
 import { getDeviceName } from '../Integrations/Platform';

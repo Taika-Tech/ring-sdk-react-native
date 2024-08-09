@@ -71,19 +71,19 @@ export type IOMappings = {
 }
 
 export interface ModeActionData {
-    mode:               ModeIndex,
-    gesture:            Gestures,
-    isIncremental:      boolean,
-    incrementalStarted: boolean,
-    rollPitchYaw:       Vector3,
+    mode:                   ModeIndex,
+    gesture:                Gestures,
+    isIncremental:          boolean,
+    incrementalStarted:     boolean,
+    rollPitchYaw:           Vector3,
 }
 
 export interface MotionData {
-    acc: Vector3,
-    gyro: Vector3,
-    mag: Vector3,
-    orientationRelative: Vector4,
-    orientationAbsolute: Vector4,
+    acc:                    Vector3,
+    gyro:                   Vector3,
+    mag:                    Vector3,
+    orientationRelative:    Vector4,
+    orientationAbsolute:    Vector4,
 }
   
 export interface MouseConfig {
