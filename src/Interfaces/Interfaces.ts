@@ -70,6 +70,14 @@ export type IOMappings = {
     [key in Gestures]?:     IOMapping;
 }
 
+export interface ModeActionData {
+    mode:               ModeIndex,
+    gesture:            Gestures,
+    isIncremental:      boolean,
+    incrementalStarted: boolean,
+    rollPitchYaw:       Vector3,
+}
+
 export interface MotionData {
     acc: Vector3,
     gyro: Vector3,
@@ -99,13 +107,6 @@ export interface MQTTConfiguration {
     // name
 }
 
-export interface MqttData {
-    gesture:            Gestures,
-    mode:               ModeIndex,
-    rollPitchYaw:       Vector3,
-    firstPacket:        number,
-}
-
 export interface MQTTTopicsConfig {
     availability:           { topic: string };
     event_types:            string[];
@@ -118,31 +119,6 @@ export interface RingBleConfig {
     sqlIdentifier:          number;
     id:                     string;
     name:                   string;
-}
-
-export interface RingContextType {
-    appConfig:                  AppConfig | null;
-    mouseConfig:                MouseConfig | null;
-    handedness:                 Handedness | null;
-    mqttConfig:                 MQTTConfiguration,
-    currentRingModes:           RingModes,
-    currentlyModifiedMode:      RingMode | null,
-    allModes:                   { [uniqueID: number]: RingMode };
-    ioMappings:                 IOMapping[],
-    ringBleInfo:                RingBleConfig | null,
-    setAppConfig:               (config: AppConfig) => Promise<void>;
-    setMouseConfig:             (config: MouseConfig) => Promise<void>;
-    setHandedness:              (config: Handedness) => Promise<void>;
-    setMQTTConfig:              (config: MQTTConfiguration) => Promise<void>;
-    setCurrentRingModes:        (modes: RingModes) => Promise<void>;
-    setCurrentlyModifiedMode:   (mode: ModeIndex) => Promise<void>;
-    setMode:                    (mode: RingMode) => Promise<void>;
-    setAllModes:                (modes: RingMode[]) => Promise<void>;
-    setIOMapping:               (newMapping: IOMapping) => Promise<void>;
-    setAllIOMappings:           (newMappings: IOMapping[]) => Promise<void>;
-    setRingBleInfo:             (config: RingBleConfig) => Promise<void>;
-    resetMappingsOfCurrentMode: () => Promise<void>,
-    clearMappingsOfCurrentMode: () => Promise<void>,
 }
 
 export interface RingMode {                             // 41 bytes

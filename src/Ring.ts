@@ -237,6 +237,14 @@ class Ring {
     }
 
     /**
+     * Gets the MQTT configuration parameters.
+     * @returns MQTTConfiguration
+     */
+    public getMQTTConfig(): MQTTConfiguration {
+        return this.mqttConfig;
+    }
+
+    /**
      * Sets the current ring modes (i.e. uniqueID of a mode object assigned to mode 1, 2, and 3) and saves them to the database.
      * @param modes - The new ring modes.
      */

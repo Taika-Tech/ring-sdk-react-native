@@ -80,7 +80,6 @@ class TaikaBleManager {
     // Add callbacks that are called each time ring has connected
     this.connectionHandler.addRingReadyCallback(this.ringReadyCB.bind(this));
     this.connectionHandler.setRing(ring);
-    this.notificationHandler.setRing(ring);
   }
 
   public startBle() {

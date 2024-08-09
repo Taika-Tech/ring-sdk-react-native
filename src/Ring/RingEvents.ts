@@ -20,7 +20,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { MotionData, TouchData } from '../Interfaces/Interfaces';
+import { ModeActionData, MotionData, TouchData } from '../Interfaces/Interfaces';
 
 type EventCallback = (...args: any[]) => void;
 type Vector3 = [number, number, number];
@@ -73,42 +73,6 @@ export function onTouchEvent(callback: (data: TouchData) => void): void {
     ringEventHandler.on('touchEvent', callback);
 }
 
-// Other event methods...
-
-/*
-
-Example Usage in Application for new callback system
-
-import { onConnected, onDisconnected, onLowBattery, onNewData } from './RingEvents';
-import { connectRing, disconnectRing } from './RingConnection';
-
-onConnected(() => {
-    console.log('Ring connected');
-});
-
-onDisconnected(() => {
-    console.log('Ring disconnected');
-});
-
-onLowBattery(() => {
-    console.log('Low battery warning');
-});
-
-onNewData((data) => {
-    console.log('New data received:', data);
-});
-
-/* 
-TODO: Add triggers like this to events from BLE 
-
-// Somewhere in your connection logic
-function connectRing() {
-    // Logic to connect the ring...
-    ringEventHandler.trigger('connected');
+export function onModeActionEvent(callback: (data: ModeActionData) => void): void {
+    ringEventHandler.on('modeActionEvent', callback);
 }
-
-// Somewhere in your data handling logic
-function handleNewData(data: any) {
-    ringEventHandler.trigger('newData', data);
-}
-*/

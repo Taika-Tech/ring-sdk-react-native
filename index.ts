@@ -71,7 +71,6 @@ export * from './src/Ring/Ring-Mode/RingMode';
 export * from './src/Ring/Ring-Mode/RingModes';
 export * from './src/Ring/Ring-Mode/RingTimeOutsObject';
 export * from './src/Ring/RingConfig';
-export * from './src/Ring/RingData';
 export * from './src/Ring/RingEvents';
 
 // Services

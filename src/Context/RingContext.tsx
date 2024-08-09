@@ -23,7 +23,7 @@
 import React, { ReactNode, createContext, useEffect, useState } from 'react';
 // SDK imports
 import Ring from '../Ring';
-import { AppConfig, RingContextType, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig } from '../Interfaces/Interfaces';
+import { AppConfig, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig } from '../Interfaces/Interfaces';
 import { defaultMouseConfig, defaultHandedness, defaultMQTTConfig, defaultRingModes, defaultBleConfig } from '../Config/TableConfigurations';
 import { ModeIndex } from '../Interfaces/Enums';
 import { RingMode } from '../Interfaces/Interfaces';
@@ -32,6 +32,31 @@ import { logRing } from '../Utils/Logging/TaikaLog';
 
 interface Props {
     children: ReactNode;
+}
+
+export interface RingContextType {
+    appConfig:                  AppConfig | null;
+    mouseConfig:                MouseConfig | null;
+    handedness:                 Handedness | null;
+    mqttConfig:                 MQTTConfiguration,
+    currentRingModes:           RingModes,
+    currentlyModifiedMode:      RingMode | null,
+    allModes:                   { [uniqueID: number]: RingMode };
+    ioMappings:                 IOMapping[],
+    ringBleInfo:                RingBleConfig | null,
+    setAppConfig:               (config: AppConfig) => Promise<void>;
+    setMouseConfig:             (config: MouseConfig) => Promise<void>;
+    setHandedness:              (config: Handedness) => Promise<void>;
+    setMQTTConfig:              (config: MQTTConfiguration) => Promise<void>;
+    setCurrentRingModes:        (modes: RingModes) => Promise<void>;
+    setCurrentlyModifiedMode:   (mode: ModeIndex) => Promise<void>;
+    setMode:                    (mode: RingMode) => Promise<void>;
+    setAllModes:                (modes: RingMode[]) => Promise<void>;
+    setIOMapping:               (newMapping: IOMapping) => Promise<void>;
+    setAllIOMappings:           (newMappings: IOMapping[]) => Promise<void>;
+    setRingBleInfo:             (config: RingBleConfig) => Promise<void>;
+    resetMappingsOfCurrentMode: () => Promise<void>,
+    clearMappingsOfCurrentMode: () => Promise<void>,
 }
 
 // Initialize context with default non-null values

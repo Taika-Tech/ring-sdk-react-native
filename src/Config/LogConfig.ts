@@ -25,7 +25,7 @@ export const logSettings = {
     mqttLog: true,
     mqttUiLog: true,
     bleLog: true,
-    uiLog: true,
+    uiLog: false,
     sqlLog: false,
     fileExplorerLog: true,
     connectedDevicesLog: false,
