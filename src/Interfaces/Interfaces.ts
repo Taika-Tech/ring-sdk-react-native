@@ -99,6 +99,13 @@ export interface MQTTConfiguration {
     // name
 }
 
+export interface MqttData {
+    gesture:            Gestures,
+    mode:               ModeIndex,
+    rollPitchYaw:       Vector3,
+    firstPacket:        number,
+}
+
 export interface MQTTTopicsConfig {
     availability:           { topic: string };
     event_types:            string[];
