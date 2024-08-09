@@ -138,7 +138,7 @@ class NotificationHandler {
     const modeActionData = parseModeActionData(byteArray);
 
     if (modeActionData) {
-      ringEventHandler.trigger("ModeAction", modeActionData);
+      ringEventHandler.trigger('ModeActionEvent', modeActionData);
     }
   }
 
@@ -146,7 +146,7 @@ class NotificationHandler {
     const modeIncrementalActionData = parseIncrementalActionData(byteArray);
 
     if (modeIncrementalActionData) {
-      ringEventHandler.trigger("ModeAction", modeIncrementalActionData);
+      ringEventHandler.trigger('ModeActionEvent', modeIncrementalActionData);
     }
   }
 
