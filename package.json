@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepublishOnly": "NODE_ENV=production npm run build"
   },
   "author": "Taika Tech Oy",
   "license": "TSL1 - See LICENSE.md for more details",
@@ -32,6 +33,7 @@
     "@types/text-encoding": "^0.0.39",
     "add-shebang": "^0.1.0",
     "jest": "^29.7.0",
+    "jest-react-native": "^18.0.0",
     "patch-package": "^8.0.0",
     "ts-jest": "^29.1.5"
   }

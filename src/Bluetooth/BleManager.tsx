@@ -257,6 +257,9 @@ class TaikaBleManager {
       return null;
     }
   }
+
+  // Uncomment this ONLY during testing
+  //public __test__ringReadyCB = this.ringReadyCB;  
 }
 
 export default TaikaBleManager;

@@ -21,7 +21,7 @@
 */
 
 import { Color } from './ColorsConfig';
-import { MQTTMapping, mouseMapping, presentationMapping, musicMapping, blankMapping, APPLICATION_DEVICE_HANDLE, influencerMapping } from './RingIOMappingsConfig';
+import { MQTTMapping, mouseMapping, presentationMapping, musicMapping, blankMapping, APPLICATION_DEVICE_HANDLE } from './RingIOMappingsConfig';
 import { IOMappings, RingMode } from '../Interfaces/Interfaces';
 import { ModeIndex, TaikaModeType, TimeoutOptions } from '../Interfaces/Enums';
 
@@ -86,7 +86,7 @@ const defaultModes: RingMode[] = [
         mouseTarget: APPLICATION_DEVICE_HANDLE,
         activeMouse: 0,
         uniqueID: 4,
-    },*/
+    },*//*
     {
         name: "Influencer",
         activeTimeoutS: TimeoutOptions.Timeout_10s,
@@ -98,7 +98,7 @@ const defaultModes: RingMode[] = [
         mouseTarget: APPLICATION_DEVICE_HANDLE,
         activeMouse: 0,
         uniqueID: 5,
-    },
+    },*/
     {
         name: "Music",
         activeTimeoutS: TimeoutOptions.Timeout_30s,

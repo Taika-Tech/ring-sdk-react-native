@@ -54,13 +54,13 @@ export const allowedActions: { [key: number]: MappingActions[] } = {
     ],
     /*[TaikaModeType.Sport]: [
         MappingActions.NoAction, MappingActions.PlayPause, MappingActions.NextSong, MappingActions.PreviousSong, MappingActions.VolumeUp, MappingActions.VolumeDown
-    ],*/
+    ],*//*
     [TaikaModeType.Influencer]: [
         MappingActions.NoAction, MappingActions.PlayPause, MappingActions.NextSong, MappingActions.PreviousSong,
         MappingActions.VolumeUp, MappingActions.VolumeDown, MappingActions.LeftClick, MappingActions.DoubleClick,
         MappingActions.RightClick, MappingActions.DragAndDrop, MappingActions.Cursor, 
         MappingActions.swipeUp, MappingActions.swipeDown, MappingActions.swipeLeft, MappingActions.swipeRight
-    ],
+    ],*/
     [TaikaModeType.Music]: [
         MappingActions.NoAction, MappingActions.PlayPause, MappingActions.NextSong, MappingActions.PreviousSong,
         MappingActions.VolumeUp, MappingActions.VolumeDown
@@ -92,6 +92,8 @@ function createMapping(actions: Partial<Record<Gestures, MappingActions>>): IOMa
     }, {} as IOMappings);
 }
 
+export const blankMapping = createMapping({});
+
 export const musicMapping = createMapping({
     [Gestures.singleTap]: MappingActions.PlayPause,
     [Gestures.doubleTap]: MappingActions.NextSong,
@@ -109,8 +111,6 @@ export const mouseMapping = createMapping({
     [Gestures.pressAndHold]: MappingActions.DragAndDrop
 });
 
-export const blankMapping = createMapping({});
-
 export const MQTTMapping = createMapping(
     (Object.values(Gestures) as Gestures[]).reduce((acc, gesture) => {
         acc[gesture] = MappingActions.MQTT;
@@ -125,7 +125,7 @@ export const presentationMapping = createMapping({
     [Gestures.swipeRight]: MappingActions.LeftKey,
     [Gestures.pressAndHold]: MappingActions.Cursor
 });
-
+/*
 export const influencerMapping = createMapping({
     [Gestures.singleTap]: MappingActions.PlayPause,
     [Gestures.doubleTap]: MappingActions.NextSong,
@@ -135,3 +135,4 @@ export const influencerMapping = createMapping({
     [Gestures.swipeLeft]: MappingActions.swipeLeft,
     [Gestures.swipeRight]: MappingActions.swipeRight
 });
+*/

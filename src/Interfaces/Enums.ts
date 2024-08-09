@@ -189,7 +189,7 @@ export enum TaikaModeType {
     //TvControl =       0x02,
     PresentationTool =  0x03,
     //Sport =           0x04,
-    Influencer =        0x05,
+    //Influencer =        0x05,
     Music =             0x06,
     Custom =            0x07,
 }

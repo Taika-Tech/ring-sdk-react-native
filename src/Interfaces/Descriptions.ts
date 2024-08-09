@@ -86,7 +86,7 @@ export const ModeTypeDescriptions: { [key in TaikaModeType]: string } = {
     //[TaikaModeType.TvControl]: "TV Control",
     [TaikaModeType.PresentationTool]: "Presentation Tool",
     //[TaikaModeType.Sport]: "Sport",
-    [TaikaModeType.Influencer]: "Influencer",
+    //[TaikaModeType.Influencer]: "Influencer",
     [TaikaModeType.Music]: "Music",
     [TaikaModeType.Custom]: "Custom"
 };
@@ -97,7 +97,7 @@ export const ModeTypeDescriptionsExtended: { [key in TaikaModeType]: string } = 
     //[TaikaModeType.TvControl]: "TV Control",
     [TaikaModeType.PresentationTool]: "Swipe to switch slides with Presentation Tool. You can point on the screen by pressing and holding the ring's touchpad.",
     //[TaikaModeType.Sport]: "Sport",
-    [TaikaModeType.Influencer]: "Flick through social media reels.",
+    //[TaikaModeType.Influencer]: "Flick through social media reels.",
     [TaikaModeType.Music]: "In music mode, you can tap to play/pause and swipe to switch the song. You can customize functionality from functions below.",
     [TaikaModeType.Custom]: "Use custom mode for making your own mode."
 };

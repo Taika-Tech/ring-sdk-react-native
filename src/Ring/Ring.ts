@@ -456,8 +456,8 @@ class Ring {
                 return Mappings.MQTTMapping;
             case TaikaModeType.PresentationTool:
                 return Mappings.presentationMapping;
-            case TaikaModeType.Influencer:
-                return Mappings.influencerMapping;
+            case TaikaModeType.Custom:
+                return Mappings.blankMapping;
             default:
                 return Mappings.blankMapping; // Return blank for other types
         }

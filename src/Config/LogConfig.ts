@@ -20,15 +20,44 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-export const logSettings = {
-    ringLog: true,
-    mqttLog: true,
-    mqttUiLog: true,
-    bleLog: true,
-    uiLog: false,
-    sqlLog: false,
-    fileExplorerLog: true,
+interface LogSettings {
+    ringLog: boolean;
+    mqttLog: boolean;
+    mqttUiLog: boolean;
+    bleLog: boolean;
+    uiLog: boolean;
+    sqlLog: boolean;
+    fileExplorerLog: boolean;
+    connectedDevicesLog: boolean;
+    appLog: boolean;
+    mappingsLog: boolean;
+}
+
+const devLogSettings: LogSettings = {
+    ringLog:            true,
+    mqttLog:            true,
+    mqttUiLog:          true,
+    bleLog:             true,
+    uiLog:              false,
+    sqlLog:             false,
+    fileExplorerLog:    true,
     connectedDevicesLog: false,
-    appLog: true,
-    mappingsLog: true
+    appLog:             true,
+    mappingsLog:        true
 };
+
+const prodLogSettings: LogSettings = {
+    ringLog:            false,
+    mqttLog:            false,
+    mqttUiLog:          false,
+    bleLog:             false,
+    uiLog:              false,
+    sqlLog:             false,
+    fileExplorerLog:    false,
+    connectedDevicesLog: false,
+    appLog:             false,
+    mappingsLog:        false
+};
+  
+export const logSettings: LogSettings = 
+    process.env.NODE_ENV === 'production' ? prodLogSettings : devLogSettings;
