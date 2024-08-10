@@ -1,6 +1,6 @@
 {
   "name": "ring-sdk-react-native",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Software Development Kit for Taika Ring",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
