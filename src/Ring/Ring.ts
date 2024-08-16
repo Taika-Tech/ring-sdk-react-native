@@ -491,6 +491,13 @@ class Ring {
             return false;
         }
     }
+
+  /*************************************************************************************** /
+  *  BLE state restoration for background execution
+  * ***************************************************************************************/
+  public async restoreBleState(restoredState: any) {
+    this.bleManager?.restoreState(restoredState);
+  }
 }
 
 export default Ring;

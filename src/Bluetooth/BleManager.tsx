@@ -260,6 +260,12 @@ class TaikaBleManager {
 
   // Uncomment this ONLY during testing
   //public __test__ringReadyCB = this.ringReadyCB;  
+  /*************************************************************************************** /
+  *  BLE state restoration for background execution
+  * ***************************************************************************************/
+  public async restoreState(restoredState: any) {
+    this.connectionHandler?.restoreStateFunction(restoredState);
+  }
 }
 
 export default TaikaBleManager;

@@ -264,7 +264,7 @@ class ConnectionHandler {
     //this.ringReadyCallbacks.forEach(callback => callback());
   }
 
-  private async restoreStateFunction(restoredState: any) {
+  public async restoreStateFunction(restoredState: any) {
     if (restoredState == null) {
       logBLE('Ble Manager not restored');
       return;
