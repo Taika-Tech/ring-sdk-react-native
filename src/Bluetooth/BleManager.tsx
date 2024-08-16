@@ -81,7 +81,7 @@ class TaikaBleManager {
 
     this.ring = ring;
     
-    this.notificationHandler = new NotificationHandler(connectedDevices);
+    this.notificationHandler = new NotificationHandler(connectedDevices, controlService);
     this.connectionHandler = new ConnectionHandler(this.notificationHandler, manager);
     this.batteryService = batteryService;
     this.controlService = controlService;

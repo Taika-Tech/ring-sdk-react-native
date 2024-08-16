@@ -29,7 +29,7 @@ import { getDeviceName } from '../Integrations/Platform';
 // Interfaces
 import { ControlToClient, TouchpadReadType } from '../Interfaces/Enums';
 // Service UUIDs
-import { controlToClientCharacteristicUUID } from '../Services/ControlService';
+import ControlService, { controlToClientCharacteristicUUID } from '../Services/ControlService';
 import { claimPrimaryCharacteristicUUID, updateModeForIndexCharacteristicUUID } from '../Services/ModeService';
 import { touchpadCharacteristicUUID } from '../Services/DataService';
 import { updateCharacteristicUUID } from '../Services/UpdateService';
@@ -41,10 +41,12 @@ import { parseIncrementalActionData, parseModeActionData, parseMotionData, parse
 class NotificationHandler {
   private connectedDevices;
   private bleLogs: BleLogs;
+  private controlService: ControlService;
 
-  public constructor(connectedDevices: ConnectedDevices) {
+  public constructor(connectedDevices: ConnectedDevices, controlService: ControlService) {
     this.connectedDevices = connectedDevices;
     this.bleLogs = BleLogs.getInstance();
+    this.controlService = controlService;
   }
 
   /*************************************************************************************** /

@@ -200,13 +200,17 @@ class ControlService extends BaseService {
   public endTouchpadDebugMode() {
     this.sendControlCommand([Commands.TOUCHPAD_DEBUG_STATE, TouchpadReadType.TP_default, 0])
   }
-
-  public reseedTouchpad() {
-    this.sendControlCommand([Commands.RESEED_TOUCHPAD])
+  
+  public sendTestPacket(testPacket: number[]) {
+    this.sendControlCommand([Commands.TEST_PACKET, ...testPacket])
   }
 
   public async magCalibrate() {
     await this.sendControlCommand([Commands.MAG_CALIBRATION])
+  }
+
+  public reseedTouchpad() {
+    this.sendControlCommand([Commands.RESEED_TOUCHPAD])
   }
 
   /**
