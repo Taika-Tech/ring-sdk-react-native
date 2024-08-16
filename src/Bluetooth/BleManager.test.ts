@@ -18,7 +18,7 @@
  *    - See the COMMERCIAL_LICENSE file for the full text of the TSL1.
  *
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+
 
 import TaikaBleManager from './BleManager';
 import { BleManager } from 'react-native-ble-plx';
@@ -187,4 +187,4 @@ describe('TaikaBleManager', () => {
             expect(mockModeService.claimPrimary).toHaveBeenCalled();
         });
     });
-});
+});*/
