@@ -31,6 +31,8 @@ import { ringEventHandler } from '../Ring/RingEvents';
 import { dataServiceUUID } from '../Services/DataService';
 import { Buffer } from 'buffer';
 
+const BEGIN_SCAN_TIMEOUT = 2000;
+
 //type Callback = () => void;
 type Callback = (...args: any[]) => void | Promise<void>;
 
@@ -123,7 +125,7 @@ class ConnectionHandler {
         if (error) {
           logBLE(`Scanning error: ${error.message}`, error.reason);
           // Attempt scanning again if scanning failed
-          this.startScanning();
+          setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
           return;
         }
 
@@ -163,7 +165,7 @@ class ConnectionHandler {
       logBLE(`Successfully connected to device: ${this.TaikaRing.name}`);
     } catch (error) {
       logBLE(`Connection error: ${(error as Error).message}`);
-      this.startScanning();
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
     }
   }
 
@@ -174,7 +176,7 @@ class ConnectionHandler {
       ringEventHandler.trigger('disconnected');
       this.clearNotifications();
       this.TaikaRing = undefined;
-      this.startScanning();
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
       subscription.remove();
     });
   }
@@ -297,10 +299,10 @@ class ConnectionHandler {
       ringEventHandler.trigger('connected');
     } catch (error) {
       logBLE(`Connection error: ${(error as Error).message}`);
-      this.startScanning();
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
     }
   }
-  
+
   public async ringRSSI(): Promise<number> {
     if (this.TaikaRing) {
       try {
