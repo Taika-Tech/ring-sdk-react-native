@@ -288,11 +288,17 @@ class ConnectionHandler {
   }
 
   public async restoredProcess(device: Device) {
-    this.TaikaRing = device;
-    logBLE(`Successfully restored Taika Ring: ${this.TaikaRing.name}`);
-    this.setupDisconnectionListener(device.id);
-    await device.discoverAllServicesAndCharacteristics();
-    await this.setupCharacteristicsAndServices();
+    try {
+      this.TaikaRing = device;
+      logBLE(`Successfully restored Taika Ring: ${this.TaikaRing.name}`);
+      this.setupDisconnectionListener(device.id);
+      await device.discoverAllServicesAndCharacteristics();
+      await this.setupCharacteristicsAndServices();
+      ringEventHandler.trigger('connected');
+    } catch (error) {
+      logBLE(`Connection error: ${(error as Error).message}`);
+      this.startScanning();
+    }
   }
   
   public async ringRSSI(): Promise<number> {
