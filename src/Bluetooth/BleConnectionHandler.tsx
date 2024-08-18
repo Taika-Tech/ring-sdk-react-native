@@ -180,9 +180,9 @@ class ConnectionHandler {
       logBLE(`Successfully connected to device: ${this.TaikaRing.name}`);
     } catch (error) {
       logBLE(`Connection error: ${(error as Error).message}`);
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
     } finally {
       this.isConnecting = false;
-      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
     }
   }
 
