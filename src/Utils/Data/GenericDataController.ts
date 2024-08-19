@@ -79,7 +79,7 @@ class GenericDataController {
 
     // Delete data
     public async deleteData(condition: string, conditionParams: any[]): Promise<boolean> {
-        console.log("GenericDataController.tsx, deleteData called");
+        console.log("GenericDataController.ts, deleteData called");
         try {
             await this.checkTableExistsAndReady();
             await this.dbManager.deleteRow(this.config.tableName, condition, conditionParams);

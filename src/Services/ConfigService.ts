@@ -20,7 +20,6 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { logBLE, logConnectedDevices } from '../Utils/Logging/TaikaLog';
 import BaseService from './BaseService';
 
 const configServiceUUID: string = "a0f5e4ad-da0f-4b83-8e39-0f55260b2320";

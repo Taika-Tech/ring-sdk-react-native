@@ -21,6 +21,7 @@ import SQLite, { SQLiteDatabase } from 'react-native-sqlite-storage';
 import { tableConfigurations } from '../../Config/TableConfigurations';
 import { logSQL } from '../Logging/TaikaLog';
 import { TableColumn } from '../../Interfaces/Interfaces';
+import { DataConfiguration } from 'ring-sdk-react-native';
 
 class DatabaseManager {
     private static instance: DatabaseManager | null = null;
@@ -49,7 +50,7 @@ class DatabaseManager {
                 db => {
                     this.db = db;
                     logSQL("Database successfully opened");
-                    this.initializeTables().then(resolve).catch(reject);
+                    this.initializeTables(tableConfigurations).then(resolve).catch(reject);
                 },
                 error => {
                     console.error('Failed to open database:', error);
@@ -59,7 +60,7 @@ class DatabaseManager {
         });
     }
 
-    private async initializeTables(): Promise<void> {
+    public async initializeTables(configurations: {[key: string]: DataConfiguration}): Promise<void> {
         if (!this.db) {
             console.error("Database initialization failed: Database instance is not ready.");
             throw new Error("Database instance is not ready.");
@@ -67,8 +68,8 @@ class DatabaseManager {
 
         logSQL("Starting table initialization in DatabaseManager initialization.");
 
-        for (const key in tableConfigurations) {
-            const config = tableConfigurations[key as keyof typeof tableConfigurations];
+        for (const key in configurations) {
+            const config = configurations[key as keyof typeof configurations];
             if (await this.checkTableExists(config.tableName)) {
                 logSQL(`Table '${config.tableName}' already exists, moving to next table.`);
             } else {

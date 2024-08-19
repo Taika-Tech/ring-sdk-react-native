@@ -45,7 +45,7 @@ import {
 import { Gestures, TaikaModeType } from '../../Interfaces/Enums';
 import defaultModes from '../../Config/RingModesConfig';
 import { IOMappings } from '../../Interfaces/Interfaces';
-import { musicMapping, mouseMapping, MQTTMapping, influencerMapping, presentationMapping, blankMapping } from '../../Config/RingIOMappingsConfig';
+import { musicMapping, mouseMapping, MQTTMapping, presentationMapping, blankMapping } from '../../Config/RingIOMappingsConfig';
 
 class DataInitializer {
     private controllers: { [key: string]: GenericDataController } = {};
@@ -181,8 +181,6 @@ class DataInitializer {
                 return MQTTMapping;
             case TaikaModeType.PresentationTool:
                 return presentationMapping;
-            case TaikaModeType.Influencer:
-                return influencerMapping;
             default:
                 return blankMapping;
         }

@@ -258,8 +258,9 @@ class TaikaBleManager {
     }
   }
 
-  // Uncomment this ONLY during testing
-  //public __test__ringReadyCB = this.ringReadyCB;  
+  public __test__ringReadyCB = process.env.NODE_ENV !== 'production' 
+    ? this.ringReadyCB 
+    : () => { throw new Error('Test method not available in production'); };
 }
 
 export default TaikaBleManager;

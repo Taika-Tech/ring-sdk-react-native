@@ -167,18 +167,17 @@ export interface TableRowItem {
 }
 
 export interface TouchTimestampedEventMask {
-    currentEvents: TouchEventMask;
-    eventTimestamp: number;
+    currentEvents:          TouchEventMask;
+    eventTimestamp:         number;
 }
 
-
 export interface TouchData {
-    touchActive:        boolean,
-    x:                  number,
-    y:                  number,
-    touchStrength:      number,
-    timestamp:          number,
-    touchpadEventMask:  TouchEventMask,
+    touchActive:            boolean,
+    x:                      number,
+    y:                      number,
+    touchStrength:          number,
+    timestamp:              number,
+    touchpadEventMask:      TouchEventMask,
 }
 
 export interface Vector3 {

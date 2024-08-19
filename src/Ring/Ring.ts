@@ -89,7 +89,7 @@ class Ring {
 
     /**
      * Private constructor to enforce singleton pattern.
-     * Initializes everything.
+     * Doesn't initialize anything, calling Ring.initialize(args) is required.
      */
     private constructor() {
     }
@@ -121,15 +121,19 @@ class Ring {
         this.allModes = allModes;
         this.ioMappings = ioMappings;
 
+        // Moving MQTT out of SDK
+        //this.mqttConfig = await dataInitializer.initializeMQTTConfig();
 
-        this.mqttConfig = await dataInitializer.initializeMQTTConfig();
         this.bleInfo = await dataInitializer.initializeBLEConfig();
+
         // These need to be initialized before setting up services
         const connectedDevices = ConnectedDevices.createInstance(this.controllers);
         this.bleManager = TaikaBleManager.createInstance();
         await this.bleManager.initialize(this, connectedDevices, this.batteryService, this.controlService, this.devInfoService, this.modeService, manager);
         logRing("BLE init through");
-        this.MQTTClient = MQTTClient.createInstance(this.mqttConfig);
+
+        // Moving MQTT out of SDK
+        //this.MQTTClient = MQTTClient.createInstance(this.mqttConfig);
 
         this.devInfoService.setBleManager(this.bleManager);
         this.controlService.setBleManager(this.bleManager);
