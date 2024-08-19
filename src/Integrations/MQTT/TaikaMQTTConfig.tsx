@@ -39,8 +39,8 @@ class MQTTTopics {
                 state_topic: `taika/rings/${ringName}_MODE1/state`,
                 availability: { topic: `taika/rings/${ringName}/status` },
                 event_types: [
-                    "Single tap", "Double tap", "Triple tap",
-                    "Swipe up", "Swipe down", "Swipe left", "Swipe right", "Press & hold", "No gesture"
+                    "Single Tap", "Double Tap", "Triple Tap",
+                    "Swipe Up", "Swipe Down", "Swipe Left", "Swipe Right", "Press & Hold", "No Gesture"
                 ]
             },
             1: {
@@ -49,8 +49,8 @@ class MQTTTopics {
                 state_topic: `taika/rings/${ringName}_MODE2/state`,
                 availability: { topic: `taika/rings/${ringName}/status` },
                 event_types: [
-                    "Single tap", "Double tap", "Triple tap",
-                    "Swipe up", "Swipe down", "Swipe left", "Swipe right", "Press & hold", "No gesture"
+                    "Single Tap", "Double Tap", "Triple Tap",
+                    "Swipe Up", "Swipe Down", "Swipe Left", "Swipe Right", "Press & Hold", "No Gesture"
                 ]
             },
             2: {
@@ -59,8 +59,8 @@ class MQTTTopics {
                 state_topic: `taika/rings/${ringName}_MODE3/state`,
                 availability: { topic: `taika/rings/${ringName}/status` },
                 event_types: [
-                    "Single tap", "Double tap", "Triple tap",
-                    "Swipe up", "Swipe down", "Swipe left", "Swipe right", "Press & hold", "No gesture"
+                    "Single Tap", "Double Tap", "Triple Tap",
+                    "Swipe Up", "Swipe Down", "Swipe Left", "Swipe Right", "Press & Hold", "No Gesture"
                 ]
             }
         };

@@ -55,7 +55,6 @@ export * from './src/Context/RingContext';
 
 // Integrations
 export * from './src/Integrations/ConnectedDevices';
-export * from './src/Integrations/MQTT/TaikaMQTT';
 export * from './src/Integrations/MQTT/TaikaMQTTConfig';
 export * from './src/Integrations/Platform';
 

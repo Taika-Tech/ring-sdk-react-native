@@ -31,6 +31,8 @@ import { ringEventHandler } from '../Ring/RingEvents';
 import { dataServiceUUID } from '../Services/DataService';
 import { Buffer } from 'buffer';
 
+const BEGIN_SCAN_TIMEOUT = 2000;
+
 //type Callback = () => void;
 type Callback = (...args: any[]) => void | Promise<void>;
 
@@ -115,7 +117,13 @@ class ConnectionHandler {
     }
   }
 
+  private isScanning: boolean = false;
   private async startScanning() {
+    if (this.isScanning) {
+      logBLE("Scan already in progress, skipping");
+      return;
+    }
+    this.isScanning = true;
     try {
       this.manager.startDeviceScan([dataServiceUUID], this.scanParams, (error, device) => {
       //this.manager.startDeviceScan(null, this.scanParams, (error, device) => {
@@ -123,7 +131,7 @@ class ConnectionHandler {
         if (error) {
           logBLE(`Scanning error: ${error.message}`, error.reason);
           // Attempt scanning again if scanning failed
-          this.startScanning();
+          setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
           return;
         }
 
@@ -135,6 +143,8 @@ class ConnectionHandler {
       });
     } catch (error) {
       logBLE(`Scan error: ${(error as Error).message}`);
+    } finally {
+      this.isScanning = false;
     }
   }
 
@@ -151,8 +161,15 @@ class ConnectionHandler {
       return device.id === this.ring?.bleInfo.id;
     }
   }
+  private isConnecting: boolean = false;
 
   private async connectAndSetupDevice(device: Device) {
+    if (this.isConnecting || this.isRestoring) {
+      logBLE("Connection or restoration already in progress, skipping");
+      return;
+    }
+  
+    this.isConnecting = true;
     logBLE(`Attempting connection to device: ${device.name}`);
     try {
       this.TaikaRing = await this.manager.connectToDevice(device.id);
@@ -163,7 +180,9 @@ class ConnectionHandler {
       logBLE(`Successfully connected to device: ${this.TaikaRing.name}`);
     } catch (error) {
       logBLE(`Connection error: ${(error as Error).message}`);
-      this.startScanning();
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
+    } finally {
+      this.isConnecting = false;
     }
   }
 
@@ -174,7 +193,9 @@ class ConnectionHandler {
       ringEventHandler.trigger('disconnected');
       this.clearNotifications();
       this.TaikaRing = undefined;
-      this.startScanning();
+      this.isConnecting = false;  // Reset connecting flag
+      this.manager.stopDeviceScan();  // Ensure any ongoing scan is stopped
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
       subscription.remove();
     });
   }
@@ -264,7 +285,7 @@ class ConnectionHandler {
     //this.ringReadyCallbacks.forEach(callback => callback());
   }
 
-  private async restoreStateFunction(restoredState: any) {
+  public async restoreStateFunction(restoredState: any) {
     if (restoredState == null) {
       logBLE('Ble Manager not restored');
       return;
@@ -287,14 +308,30 @@ class ConnectionHandler {
     logBLE(`BleManager restored: ${restoredState.connectedPeripherals.map((device: Device) => device.name)}`);
   }
 
+  private isRestoring: boolean = false;
   public async restoredProcess(device: Device) {
-    this.TaikaRing = device;
-    logBLE(`Successfully restored Taika Ring: ${this.TaikaRing.name}`);
-    this.setupDisconnectionListener(device.id);
-    await device.discoverAllServicesAndCharacteristics();
-    await this.setupCharacteristicsAndServices();
-  }
+    if (this.isConnecting || this.isRestoring) {
+      logBLE("Connection or restoration already in progress, skipping restored process");
+      return;
+    }
   
+    this.isRestoring = true;
+    try {
+      this.TaikaRing = device;
+      logBLE(`Successfully restored Taika Ring: ${this.TaikaRing.name}`);
+      this.setupDisconnectionListener(device.id);
+      await device.discoverAllServicesAndCharacteristics();
+      await this.setupCharacteristicsAndServices();
+      ringEventHandler.trigger('connected');
+    } catch (error) {
+      logBLE(`Restoration error: ${(error as Error).message}`);
+      this.TaikaRing = undefined;
+      setTimeout(() => this.startScanning(), BEGIN_SCAN_TIMEOUT);
+    } finally {
+      this.isRestoring = false;
+    }
+  }
+
   public async ringRSSI(): Promise<number> {
     if (this.TaikaRing) {
       try {

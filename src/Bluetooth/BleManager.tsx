@@ -81,7 +81,7 @@ class TaikaBleManager {
 
     this.ring = ring;
     
-    this.notificationHandler = new NotificationHandler(connectedDevices);
+    this.notificationHandler = new NotificationHandler(connectedDevices, controlService);
     this.connectionHandler = new ConnectionHandler(this.notificationHandler, manager);
     this.batteryService = batteryService;
     this.controlService = controlService;
@@ -261,6 +261,13 @@ class TaikaBleManager {
   public __test__ringReadyCB = process.env.NODE_ENV !== 'production' 
     ? this.ringReadyCB 
     : () => { throw new Error('Test method not available in production'); };
+
+    /*************************************************************************************** /
+  *  BLE state restoration for background execution
+  * ***************************************************************************************/
+  public async restoreState(restoredState: any) {
+    this.connectionHandler?.restoreStateFunction(restoredState);
+  }
 }
 
 export default TaikaBleManager;

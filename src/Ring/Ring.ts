@@ -40,7 +40,6 @@ import { Handedness, ModeIndex, TaikaModeType } from '../Interfaces/Enums';
 import { debounce } from 'lodash';
 import * as Mappings from '../Config/RingIOMappingsConfig';
 import { ConnectedDevices } from '../Integrations/ConnectedDevices';
-import MQTTClient from '../Integrations/MQTT/TaikaMQTT';
 import ControlService from '../Services/ControlService';
 import BatteryService from '../Services/BatteryService';
 import ModeService from '../Services/ModeService';
@@ -60,7 +59,6 @@ class Ring {
 
     // BLE & Services
     private bleManager: TaikaBleManager | undefined;
-    private MQTTClient: MQTTClient | undefined;
     public devInfoService: DeviceInformationService = new DeviceInformationService();
     public controlService: ControlService = new ControlService();
     public batteryService: BatteryService = new BatteryService();
@@ -131,9 +129,6 @@ class Ring {
         this.bleManager = TaikaBleManager.createInstance();
         await this.bleManager.initialize(this, connectedDevices, this.batteryService, this.controlService, this.devInfoService, this.modeService, manager);
         logRing("BLE init through");
-
-        // Moving MQTT out of SDK
-        //this.MQTTClient = MQTTClient.createInstance(this.mqttConfig);
 
         this.devInfoService.setBleManager(this.bleManager);
         this.controlService.setBleManager(this.bleManager);
@@ -236,7 +231,6 @@ class Ring {
      */
     public async setMQTTConfig(config: MQTTConfiguration) {
         this.mqttConfig = config;
-        this.MQTTClient?.updateConfig(config);
         await this.controllers["mqttConfiguration"].saveData(config, "brokerIP = ? AND port = ?", [config.brokerIP, config.port]);
     }
 
@@ -398,39 +392,6 @@ class Ring {
         this.setRingBleInfo(DefaultConfigs.defaultBleConfig as RingBleConfig);
     }
 
-    /**
-     * Returns wether the mqtt is connected
-     */
-    public isMQTTConnected(): boolean {
-        if (this.MQTTClient) {
-            return this.MQTTClient.isConnected();
-        }
-        return false;
-    }
-
-
-    /**
-     * Sends an MQTT packet.
-     * @param gestureName - Name of the gesture.
-     * @param modeIndex - Index of the mode.
-     * @param eulers - Optional Euler angles.
-     * @param isPacketFirst - Optional flag for packet sequence.
-     */
-    public sendMqtt(gestureName: string, modeIndex: ModeIndex, eulers?: number[], isPacketFirst?: boolean) {
-        const mqttDriver = MQTTClient.getInstance();
-        if (!mqttDriver) {
-            logRing("No mqtt instance available.");
-            return;
-        }
-        if (eulers) {
-            logRing("Send incremental mqtt packet.");
-            mqttDriver.sendTaikaPacket(gestureName, modeIndex, eulers, isPacketFirst);
-            return;
-        }
-        logRing("Send mqtt packet.");
-        mqttDriver.sendTaikaPacket(gestureName, modeIndex);
-    }
-
     /*************************************
      *  Public helpers
      *************************************/
@@ -532,6 +493,13 @@ class Ring {
             return false;
         }
     }
+
+  /*************************************************************************************** /
+  *  BLE state restoration for background execution
+  * ***************************************************************************************/
+  public async restoreBleState(restoredState: any) {
+    this.bleManager?.restoreState(restoredState);
+  }
 }
 
 export default Ring;
