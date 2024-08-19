@@ -21,7 +21,7 @@ import SQLite, { SQLiteDatabase } from 'react-native-sqlite-storage';
 import { tableConfigurations } from '../../Config/TableConfigurations';
 import { logSQL } from '../Logging/TaikaLog';
 import { TableColumn } from '../../Interfaces/Interfaces';
-import { DataConfiguration } from 'ring-sdk-react-native';
+import { DataConfiguration } from '../../Interfaces/Interfaces';
 
 class DatabaseManager {
     private static instance: DatabaseManager | null = null;
