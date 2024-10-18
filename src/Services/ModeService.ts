@@ -47,8 +47,13 @@ class ModeService extends BaseService {
     this.connectedDevices = connectedDevices;
   }
 
-  public async applyUserMode(data: number[]): Promise<boolean> {
-    return await this.write(data, applyUserModeCharacteristicUUID);
+  /**
+   * Sets the current mode.
+   * @param mode mode index (0 to 2)
+   * @returns A promise that resolves to true if the operation was successful, false otherwise.
+   */
+  public async applyUserMode(mode: number): Promise<boolean> {
+    return await this.write([mode], applyUserModeCharacteristicUUID);
   }
 
   public async updateModeForIndex(data: number[]): Promise<boolean> {

@@ -91,7 +91,7 @@ class BaseService {
     /**
    * Write data to a characteristic belonging the service. 
    * @param data list of numbers to write to the characteristic
-   * @param fromCharacteristic the characteristic to write to
+   * @param toCharacteristic the characteristic to write to
    * @return true if write succesfull, false otherwise
    */
     public async writeWithoutResponse(data: number[], toCharacteristic: string): Promise<boolean> {
