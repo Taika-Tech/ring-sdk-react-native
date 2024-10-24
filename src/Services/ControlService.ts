@@ -56,6 +56,8 @@ enum Commands {
     BOOT_TO_BOOTLOADER =                0x1A,
     TOUCHPAD_DEBUG_STATE =              0x1B,
     MAG_CALIBRATION =                   0x1C,
+    GYRO_CALIBRATION =                  0x1D,
+    WRITE_COMPONENT_STATUS =            0x1F,
 }
 
 export const ControlToServerNames: { [key: number]: string } = {};
@@ -207,6 +209,10 @@ class ControlService extends BaseService {
 
   public async magCalibrate() {
     await this.sendControlCommand([Commands.MAG_CALIBRATION])
+  }
+
+  public async gyroCalibrate() {
+    await this.sendControlCommand([Commands.GYRO_CALIBRATION])
   }
 
   public reseedTouchpad() {

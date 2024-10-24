@@ -22,6 +22,70 @@
 
 import { DataConfiguration } from '../Interfaces/Interfaces';
 
+// LED config is a bit more complex so we define it first on its own
+export const ledConfigTableConfig: DataConfiguration = {
+    tableName: 'LedConfiguration',
+    fields: [
+        'id',
+        'generalConfig',
+        'touchResponse',
+        'chargingConfig',
+        'colorConfig',
+        'brightness',
+        'timing',
+        'activityIndication'
+    ],
+    types: [
+        'INTEGER',
+        'TEXT',  // JSON string for complex objects
+        'TEXT',
+        'TEXT',
+        'TEXT',
+        'TEXT',
+        'TEXT',
+        'TEXT'
+    ],
+    primaryKey: ['id'],
+    defaultData: {
+        id: 1,
+        generalConfig: JSON.stringify({
+            enLedOnWhenRingActive: true,
+            enBlinkPeriodicallyWhenActive: false,
+            enBlinkPeriodicallyWhenIdle: false,
+            enMagCalibrationAnimation: true,
+            disableSystemBehaviour: false,
+            restoreDefaults: false
+        }),
+        touchResponse: JSON.stringify({
+            enActiveTouchAnimation: true,
+            enGestureAnimations: true,
+            enGestureAnimShowTapCount: false,
+            enGestureAnimPressAndHold: true
+        }),
+        chargingConfig: JSON.stringify({
+            enChargingAnimation: true,
+            chargingAnimBrightness: 5,
+            chargingAnimStepMs: 400
+        }),
+        colorConfig: JSON.stringify({
+            r: 128,
+            g: 0,
+            b: 128
+        }),
+        brightness: JSON.stringify({
+            active: 150,  // 15.0%
+            idle: 10     // 1.0%
+        }),
+        timing: JSON.stringify({
+            ledAnimationSpeedMultiplier: 420
+        }),
+        activityIndication: JSON.stringify({
+            ringActiveIndicationBlinkIntervalMs: 1000,
+            ringIdleIndicationBlinkIntervalMs: 5000
+        })
+    }
+};
+
 export const tableConfigurations: { [key: string]: DataConfiguration }  = {
     appConfig: {
         tableName: 'AppConfig',
@@ -123,6 +187,7 @@ export const tableConfigurations: { [key: string]: DataConfiguration }  = {
             name: "Taika Ring",
         }
     },
+    ledConfiguration: ledConfigTableConfig, // LED configuration defined above is added to this list for easy access
 };
 
 export default tableConfigurations;
@@ -133,3 +198,4 @@ export const defaultMQTTConfig = tableConfigurations.mqttConfiguration.defaultDa
 export const defaultHandedness = tableConfigurations.handedness.defaultData;
 export const defaultRingModes = tableConfigurations.currentRingModes.defaultData;
 export const defaultBleConfig = tableConfigurations.ringBleInfo.defaultData;
+export const defaultLedConfig = ledConfigTableConfig.defaultData;

@@ -1,5 +1,8 @@
-# Node modules
-node_modules/
+# Node modules anywhere in the repository
+**/node_modules/
+
+# iOS / CocoaPods
+**/ios/Pods/
 
 # TypeScript
 *.tsbuildinfo

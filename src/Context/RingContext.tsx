@@ -24,10 +24,11 @@ import React, { ReactNode, createContext, useEffect, useState } from 'react';
 // SDK imports
 import Ring from '../Ring/Ring';
 import { AppConfig, MouseConfig, Handedness, MQTTConfiguration, RingModes, IOMapping, RingBleConfig, RingMode } from '../Interfaces/Interfaces';
-import { defaultMouseConfig, defaultHandedness, defaultMQTTConfig, defaultRingModes, defaultBleConfig } from '../Config/TableConfigurations';
+import { defaultMouseConfig, defaultHandedness, defaultMQTTConfig, defaultRingModes, defaultBleConfig, defaultLedConfig } from '../Config/TableConfigurations';
 import { ModeIndex } from '../Interfaces/Enums';
 import { blankMapping } from '../Config/RingIOMappingsConfig';
 import { logRing } from '../Utils/Logging/TaikaLog';
+import { LedConfig } from '../Services/LedService';
 
 interface Props {
     children: ReactNode;
@@ -56,6 +57,9 @@ export interface RingContextType {
     setRingBleInfo:             (config: RingBleConfig) => Promise<void>;
     resetMappingsOfCurrentMode: () => Promise<void>,
     clearMappingsOfCurrentMode: () => Promise<void>,
+    ledConfig:                  LedConfig | null;
+    setLedConfig:               (config: LedConfig) => Promise<boolean>;
+    updateLedConfig:            <K extends keyof LedConfig>(key: K, value: LedConfig[K]) => Promise<boolean>;
 }
 
 // Initialize context with default non-null values
@@ -90,6 +94,10 @@ export const RingContext = createContext<RingContextType>({
 
     ringBleInfo: defaultBleConfig as RingBleConfig,
     setRingBleInfo: async (bleInfo: RingBleConfig) => { },
+
+    ledConfig: defaultLedConfig as LedConfig,
+    setLedConfig: async (newConfig: LedConfig) => { return false },
+    updateLedConfig: async (key, value) => { return false; },
 });
 
 // Provider Component
@@ -105,6 +113,7 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
     const [allModes, setAllModes] = useState<{ [uniqueID: number]: RingMode }>(ring.allModes);
     const [ioMappings, setAllIOMappings] = useState<IOMapping[]>(ring.ioMappings);
     const [ringBleInfo, setRingBleInfo] = useState<RingBleConfig>(ring.bleInfo || defaultBleConfig as RingBleConfig);
+    const [ledConfig, setLedConfigState] = useState<LedConfig>(ring.ledConfig);
 
     useEffect(() => {
         ring.subscribe(() => {
@@ -117,6 +126,7 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
             setAllModes({ ...ring.allModes });
             setAllIOMappings(ring.ioMappings);
             setRingBleInfo(ring.bleInfo);
+            setLedConfigState(ring.ledConfig);
 
             // Set a default mode for modifications
             // TODO: this seems to be null everytime. Figure out why and create a better solution
@@ -273,6 +283,121 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
         setCurrentlyModifiedMode(newMode);
     };
 
+    // Handle full LED config update
+    const handleSetLedConfig = async (config: LedConfig): Promise<boolean> => {
+        try {
+            await ring.setLedConfig(config);
+            setLedConfigState(config);
+            return true;
+        } catch (error) {
+            console.error('Failed to update LED configuration:', error);
+            return false;
+        }
+    };
+
+    // Handle partial LED config updates
+    const handleUpdateLedConfig = async <K extends keyof LedConfig>(
+        key: K,
+        value: LedConfig[K]
+    ): Promise<boolean> => {
+        try {
+            let success = false;
+            
+            // Call appropriate LED service method based on the key
+            switch (key) {
+                case 'colorConfig':
+                    if ('r' in value && 'g' in value && 'b' in value) {
+                        success = await ring.ledService.setDefaultRGB(
+                            value.r,
+                            value.g,
+                            value.b
+                        );
+                    }
+                    break;
+                    
+                case 'brightness':
+                    if ('active' in value && 'idle' in value) {
+                        success = await ring.ledService.setDefaultBrightness(
+                            value.active / 10, // Convert from promille to percentage
+                            value.idle / 10
+                        );
+                    }
+                    break;
+
+                case 'general':
+                    if ('enLedOnWhenRingActive' in value) {
+                        success = await ring.ledService.setGeneralConfig(
+                            value.enLedOnWhenRingActive,
+                            value.enBlinkPeriodicallyWhenActive,
+                            value.enBlinkPeriodicallyWhenIdle,
+                            value.enMagCalibrationAnimation,
+                            value.disableSystemBehaviour,
+                            value.restoreDefaults
+                        );
+                    }
+                    break;
+
+                case 'touchResponse':
+                    if ('enActiveTouchAnimation' in value) {
+                        success = await ring.ledService.setTouchResponse(
+                            value.enActiveTouchAnimation,
+                            value.enGestureAnimations,
+                            value.enGestureAnimShowTapCount,
+                            value.enGestureAnimPressAndHold
+                        );
+                    }
+                    break;
+    
+                case 'charging':
+                    if ('enChargingAnimation' in value) {
+                        success = await ring.ledService.setChargingAnimationConfig(
+                            value.enChargingAnimation,
+                            value.chargingAnimBrightness,
+                            value.chargingAnimStepMs
+                        );
+                    }
+                    break;
+
+                case 'timing':
+                    if ('ledAnimationSpeedMultiplier' in value) {
+                        success = await ring.ledService.setAnimationSpeed(
+                            value.ledAnimationSpeedMultiplier
+                        );
+                    }
+                    break;
+
+                case 'activityIndication':
+                    if ('ringActiveIndicationBlinkIntervalMs' in value) {
+                        success = await ring.ledService.setStateIndicationTiming(
+                            value.ringActiveIndicationBlinkIntervalMs,
+                            value.ringIdleIndicationBlinkIntervalMs
+                        );
+                    }
+                    break;
+            }
+    
+            if (success) {
+                // Update internal state and storage only if BLE write was successful
+                const newConfig = {
+                    ...ledConfig,
+                    [key]: value
+                };
+                
+                // Update ring's internal state and storage
+                await ring.setLedConfig(newConfig);
+                
+                // Update context state
+                setLedConfigState(newConfig);
+                return true;
+            }
+            
+            return false;
+        } catch (error) {
+            console.error(`Failed to update LED configuration key ${key}:`, error);
+            return false;
+        }
+    };
+
     return (
         <RingContext.Provider value={{
             appConfig,
@@ -305,6 +430,10 @@ export const RingProvider: React.FC<Props> = ({ children }) => {
             
             ringBleInfo,
             setRingBleInfo: handleSetRingBleInfo,
+
+            ledConfig,
+            setLedConfig: handleSetLedConfig,
+            updateLedConfig: handleUpdateLedConfig,
         }}>
             {children}
         </RingContext.Provider>

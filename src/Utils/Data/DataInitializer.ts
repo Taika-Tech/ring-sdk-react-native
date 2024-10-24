@@ -40,12 +40,14 @@ import {
     defaultHandedness,
     defaultRingModes,
     defaultBleConfig,
-    tableConfigurations
+    tableConfigurations,
+    defaultLedConfig
 } from '../../Config/TableConfigurations';
 import { Gestures, TaikaModeType } from '../../Interfaces/Enums';
 import defaultModes from '../../Config/RingModesConfig';
 import { IOMappings } from '../../Interfaces/Interfaces';
 import { musicMapping, mouseMapping, MQTTMapping, presentationMapping, blankMapping } from '../../Config/RingIOMappingsConfig';
+import { LedConfig } from '../../Services/LedService';
 
 class DataInitializer {
     private controllers: { [key: string]: GenericDataController } = {};
@@ -79,19 +81,55 @@ class DataInitializer {
 
         try {
             const appConfigData = await this.controllers["appConfig"].getData();
-            const currentRingModesData = await this.controllers["currentRingModes"].getData();
-            const mouseConfigData = await this.controllers["mouseConfiguration"].getData();
-            const handednessData = await this.controllers["handedness"].getData();
-
             if (appConfigData.length > 0) appConfig = appConfigData[0];
+        } catch (error) {
+            console.error("Failed to initialize app config:", error);
+        }
+
+        try {
+            const currentRingModesData = await this.controllers["currentRingModes"].getData();
             if (currentRingModesData.length > 0) ringModes = currentRingModesData[0];
+        } catch (error) {
+            console.error("Failed to initialize Current mode config:", error);
+        }
+
+        try {
+            const mouseConfigData = await this.controllers["mouseConfiguration"].getData();
             if (mouseConfigData.length > 0) mouseConfig = mouseConfigData[0];
+        } catch (error) {
+            console.error("Failed to initialize Mouse config:", error);
+        }
+        
+        try {
+            const handednessData = await this.controllers["handedness"].getData();
             if (handednessData.length > 0) handedness = handednessData[0].userHandedness;
         } catch (error) {
-            console.error("Failed to initialize Ring config:", error);
+            console.error("Failed to initialize Handedness config:", error);
         }
 
         return { appConfig, ringModes, mouseConfig, handedness };
+    }
+
+    public async initializeLedConfig(): Promise<LedConfig> {
+        let ledConfig = defaultLedConfig as LedConfig;
+        try {
+            const ledConfigData = await this.controllers["ledConfiguration"].getData();
+            if (ledConfigData.length > 0) {
+                ledConfig = {
+                    general: JSON.parse(ledConfigData[0].generalConfig),
+                    touchResponse: JSON.parse(ledConfigData[0].touchResponse),
+                    charging: JSON.parse(ledConfigData[0].chargingConfig),
+                    colorConfig: JSON.parse(ledConfigData[0].colorConfig),
+                    brightness: JSON.parse(ledConfigData[0].brightness),
+                    timing: JSON.parse(ledConfigData[0].timing),
+                    activityIndication: JSON.parse(ledConfigData[0].activityIndication)
+                };
+            }
+            
+        } catch (error) {
+            console.error("Failed to initialize LED config:", error);
+        }
+        return ledConfig;
     }
 
     public async initializeModesAndMappings(): Promise<{

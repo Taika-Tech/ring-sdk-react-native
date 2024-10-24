@@ -1,24 +1,5 @@
-/* Ring.tsx
- *  
- * Copyright Taika Tech 2024
- * 
- * This software is licensed under dual licensing terms:
- *
- * 1. MIT License:
- *    - when used for personal use,
- *    - when used for educational use,
- *    - when used with Taika Tech's smart rings,
- *
- *    See the LICENSE file for the full text of the MIT License.
- *
- * 2. Taika Software License 1 (TSL1):
- *    - This license applies to the use of the Software with other manufacturers' smart rings, or other 
- *      typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy.
- *    - Contact sales@taikatech.fi to acquire such a license.
- *    - See the COMMERCIAL_LICENSE file for the full text of the TSL1.
- *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
+// Ring.ts
+// Copyritght Taika Tech - license notice at the bottom of the file
 
 // Imports
 import TaikaBleManager from '../Bluetooth/BleManager';
@@ -46,14 +27,13 @@ import ModeService from '../Services/ModeService';
 import DataInitializer from '../Utils/Data/DataInitializer';
 import DeviceInformationService from '../Services/DeviceInformationService';
 import DataService from '../Services/DataService';
-import LedService from '../Services/LedService';
+import LedService, { LedConfig } from '../Services/LedService';
 import OtaDfuService from '../Services/OtaDfuService';
 import { BleManager } from 'react-native-ble-plx';
 import ConfigService from '../Services/ConfigService';
 
 
 class Ring {
-    // this
     private static instance: Ring;
     private observers: (() => void)[] = [];
 
@@ -80,9 +60,9 @@ class Ring {
     public allModes: { [uniqueID: string]: RingMode } = {};
     public ioMappings: IOMapping[] = [];
     public bleInfo: RingBleConfig = DefaultConfigs.defaultBleConfig as RingBleConfig;
+    public ledConfig: LedConfig = DefaultConfigs.defaultLedConfig as LedConfig;
 
     // Debounced function for updating mouse configuration
-    //private debouncedUpdateMouseConfig;
     private debouncedUpdateMouseConfig: ((data: MouseConfig) => void) | undefined;
 
     /**
@@ -115,6 +95,8 @@ class Ring {
         this.mouseConfig = mouseConfig;
         this.handedness = handedness;
 
+        this.ledConfig = await dataInitializer.initializeLedConfig();
+
         const { allModes, ioMappings } = await dataInitializer.initializeModesAndMappings();
         this.allModes = allModes;
         this.ioMappings = ioMappings;
@@ -145,7 +127,10 @@ class Ring {
 
         // Set up debounced update function in constructor to make type clear for compiler
         this.debouncedUpdateMouseConfig = debounce(this.updateMouseConfig, 200);
+
+        // Notfify observers after all data has been initialized
         this.notifyObservers();
+        
         logRing(" -- NewRing created and data initialized! -- ");
     }
 
@@ -169,8 +154,8 @@ class Ring {
      * 
      *************************************/
     /**
-     * Sets the ring handedness, sends it to the ring, and saves it to the database.
-     * @param data - The new handedness configuration.
+     * Sets the data streaming on for both Touchpad and motion sensors
+     * @param setTrue - True for streaming on, false for off.
      */
     public setTouchpadStreaming(setTrue: Boolean) {
         if (setTrue) {
@@ -206,11 +191,75 @@ class Ring {
         }
     }
 
-
-    // mouseConfig backend update called at max 200ms intervals
+    /**
+     * @brief Internal mouse config update, sends data to ring and save to internal database.
+     * 
+     * Debounced to max 200ms update intervals.
+     *  */ 
     private async updateMouseConfig(data: MouseConfig) {
         this.controlService.updateMouseAxesAndSensitivity(data);        // Update data to BLE manager
         await this.controllers["mouseConfiguration"].saveData(data, "id = ?", [1]);   // Save to persistent storage
+    }
+
+    /**
+     * @brief Request full LED config update from ring. 
+     * 
+     * Requests and reads the full LED config from ring, then writes it to local storage and 
+     * the ledConfig class variable.
+     *  */ 
+    public async requestLedConfigFromRing(): Promise<void> {
+        const ledConfig = await this.ledService.readLedConfig();
+        if (ledConfig) {
+            // First save to internal variable
+            this.ledConfig = ledConfig;
+
+            // Convert the config to the format expected by the database
+            const dbConfig = {
+                id: 1,
+                generalConfig: JSON.stringify(ledConfig.general),
+                touchResponse: JSON.stringify(ledConfig.touchResponse),
+                chargingConfig: JSON.stringify(ledConfig.charging),
+                colorConfig: JSON.stringify(ledConfig.colorConfig),
+                brightness: JSON.stringify(ledConfig.brightness),
+                timing: JSON.stringify(ledConfig.timing),
+                activityIndication: JSON.stringify(ledConfig.activityIndication)
+            };
+            await this.controllers["ledConfiguration"].saveData(dbConfig, "id = ?", [1]);
+        } else {
+            console.error('Failed to read LED configuration from device');
+        }
+    }
+
+    /**
+     * @brief Set and save the full LED config. 
+     *  */ 
+    public async setLedConfig(config: LedConfig): Promise<void> {
+        if (config) {
+            // First save to internal variable
+            this.ledConfig = config;
+
+            // Convert the config to the format expected by the database
+            const dbConfig = {
+                id: 1,
+                generalConfig: JSON.stringify(config.general),
+                touchResponse: JSON.stringify(config.touchResponse),
+                chargingConfig: JSON.stringify(config.charging),
+                colorConfig: JSON.stringify(config.colorConfig),
+                brightness: JSON.stringify(config.brightness),
+                timing: JSON.stringify(config.timing),
+                activityIndication: JSON.stringify(config.activityIndication)
+            };
+            await this.controllers["ledConfiguration"].saveData(dbConfig, "id = ?", [1]);
+        } else {
+            console.error('Failed to read LED configuration from device');
+        }
+    }
+
+    /**
+     * @brief Get full LED config. 
+     *  */ 
+    public getLedConfig(): LedConfig {
+        return this.ledConfig;
     }
 
     /**
@@ -503,3 +552,25 @@ class Ring {
 }
 
 export default Ring;
+
+/* Ring.ts
+ *  
+ * Copyright Taika Tech 2024
+ * 
+ * This software is licensed under dual licensing terms:
+ *
+ * 1. MIT License:
+ *    - when used for personal use,
+ *    - when used for educational use,
+ *    - when used with Taika Tech's smart rings,
+ *
+ *    See the LICENSE file for the full text of the MIT License.
+ *
+ * 2. Taika Software License 1 (TSL1):
+ *    - This license applies to the use of the Software with other manufacturers' smart rings, or other 
+ *      typically finger-worn or wrist-worn devices, and requires a separate commercial license from Taika Tech Oy.
+ *    - Contact sales@taikatech.fi to acquire such a license.
+ *    - See the COMMERCIAL_LICENSE file for the full text of the TSL1.
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
